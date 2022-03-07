@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <!-- CSS only -->
+    <link rel="icon" href="https://www.rcce-collective.net/wp-content/uploads/2021/04/android-chrome-192x192-1.png" sizes="192x192" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- bootstrap 3 -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.css" />
+
+    <!-- scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/39e5643f1a.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.js"></script>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js"></script>
+    <link href="css/styles.css" rel="stylesheet" />
+    <title>RCCE Community Feedback</title>
+
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigationPages">
+					<span class="navbar-toggler-icon"></span>
+					</button>
+                    <a class="navbar-brand" href="#">
+                        <img src="assets/logo.png" alt="Country data portal" height="100" />Country Data Portal</a>
+                    </a>
+                    <div class="collapse navbar-collapse" id="navigationPages">
+                        <ul class="navbar-nav ml-md-auto">
+                            <li class="nav-item navSite">
+                                <a class="nav-link" href="#" value="context">Context</a>
+                            </li>
+                            <li class="nav-item navSite">
+                                <a class="nav-link" href="#" value="behaviors">Behaviors</a>
+                            </li>
+                            <li class="nav-item navSite">
+                                <a class="nav-link" href="#" value="activities">Activities</a>
+                            </li>
+                            <li class="nav-item  navSite active">
+                                <a class="nav-link" href="#" value="feedback">Feedback</a>
+                            </li>
+                            <li class="nav-item navSite">
+                                <a class="nav-link" href="#" value="reports">Reports</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div class="row navPage" id="feedback-page">
+            <!-- Page 1 = Feedback -->
+            <div class="col-md-12">
+                <div class="row">
+                    <!-- Sidebar -->
+                    <div class="col-md-3 sidebar">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5>
+                                    Feedback
+                                </h5>
+                                <p class="small">
+                                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+                                </p>
+                                <div class="row">
+                                    <span class="key-figure statFeedback">
+                                        <h5 id="num"></h5>
+                                        <h6 id="label"># feedbacks</h6>
+                                    </span>
+                                    <span class="key-figure statOrg">
+                                        <h5 id="num"></h5>
+                                        <h6 id="label"># orgs</h6>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Filters</h4>
+
+                                <span class="filters dropdownSelect">
+									<label for="">Emergency</label><br/>
+									<select name="emergencySelect" id="emergencySelect"></select>
+								</span>
+
+                                <span class="filters dropdownSelect">
+									<label for="">Feedback Type</label><br/>
+									<select name="feedbackTypeSelect" id="feedbackTypeSelect"></select>
+								</span>
+
+                                <span class="filters dropdownSelect"><label for="">Date</label><br/>
+									<select name="dateSelect" id="dateSelect"></select>
+								</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Metrics</h4>
+                                <h6>Gender</h6>
+                                <div id="genderPieChart"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h6>Vulnerable Groups</h6>
+                                <div id="popGroupChart"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+
+                        <ul class="nav">
+                            <li class="nav-item navFeedback">
+                                <a class="nav-link active" href="#" value="home">Home</a>
+                            </li>
+                            <li class="nav-item navFeedback">
+                                <a class="nav-link" href="#" value="regions">Regions</a>
+                            </li>
+                            <li class="nav-item navFeedback">
+                                <a class="nav-link" href="#" value="organisation">Organisation</a>
+                            </li>
+                            <li class="nav-item navFeedback">
+                                <a class="nav-link" href="#" value="feedbacks">Feedbacks</a>
+                            </li>
+                            <li class="nav-item navFeedback">
+                                <a class="nav-link" href="#" value="reports">Reports</a>
+                            </li>
+                        </ul>
+
+                        <div class="row navigation" id="home">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h6>Emergency Pie chart</h6>
+                                        <div id="emergencyPieChart"></div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6>Type of feedback Pie chart</h6>
+                                        <div id="feedbackPieChart"></div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6>Channel Pie chart</h6>
+                                        <div id="channelPieChart"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h6>Topic Bar chart (Top 5)</h6>
+                                                <div id="topicBarChart"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h6>Category Bar chart (Top 5)</h6>
+                                                <div id="categoryBarChart"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h6>Geographic area</h6>
+                                        <div id="map"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Navigation Regions -->
+                        <div class="row navigation hidden" id="regions">
+                            <div class="col-md-12">
+                                <h2>
+                                    Regions update
+                                </h2>
+
+                            </div>
+                        </div>
+                        <!-- Navigation Organisation -->
+                        <div class="row navigation hidden" id="organisation">
+                            <div class="col-md-12">
+                                <h2>
+                                    Organisation update
+                                </h2>
+
+                            </div>
+                        </div>
+                        <!-- Navigation Feedback -->
+                        <div class="row navigation hidden" id="feedbacks">
+                            <div class="col-md-12">
+                                <h2>
+                                    Feedbacks update
+                                </h2>
+
+                            </div>
+                        </div>
+                        <!-- Navigation Reports -->
+                        <div class="row navigation hidden" id="reports">
+                            <div class="col-md-12">
+                                <h2>
+                                    Reports update
+                                </h2>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Navigation from Pages -->
+        <!-- Navigation to Context page -->
+        <div class="row navPage hidden" id="context-page">
+            <div class="col-md-12">
+                <h3>
+                    Context Page
+                </h3>
+            </div>
+        </div>
+        <!-- Navigation to Behaviors page -->
+        <div class="row navPage hidden" id="behaviors-page">
+            <div class="col-md-12">
+                <h3>
+                    Behaviors Page
+                </h3>
+            </div>
+        </div>
+        <!-- Navigation to Activities page -->
+        <div class="row navPage hidden" id="activities-page">
+            <div class="col-md-12">
+                <h3>
+                    Activities Page
+                </h3>
+            </div>
+        </div>
+        <!-- Navigation to Reports page -->
+        <div class="row navPage hidden" id="reports-page">
+            <div class="col-md-12">
+                <h3>
+                    Reports Page
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="js/bundle.js"></script>
+</body>
+
+</html>
