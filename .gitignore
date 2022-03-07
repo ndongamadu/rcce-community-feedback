@@ -348,3 +348,22 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+
+# build files
+dist/
+
+# Mac files
+.DS_Store
+
+package-lock.json
+
+# data
+
+src/data/.~*.*
