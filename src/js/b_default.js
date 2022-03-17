@@ -4,9 +4,11 @@
  */
 //Display the default Feedback->Home view
 function initFeedbackHomePage() {
-    communityFeedbackData.forEach(element => {
-        emergenciesFilterArr.includes(element[configurations["Emergency"]]) ? null : emergenciesFilterArr.push(element[configurations["Emergency"]]);
-        feedbackTypesArr.includes(element[configurations["Type"]]) ? null : feedbackTypesArr.push(element[configurations["Type"]]);
+    filteredCommunityFeedbackData.forEach(element => {
+        emergenciesFilterArr.includes(element[config['Framework']['Emergency']]) ? null : emergenciesFilterArr.push(element[config['Framework']["Emergency"]]);
+        feedbackTypesArr.includes(element[config['Framework']["Type"]]) ? null : feedbackTypesArr.push(element[config['Framework']["Type"]]);
+        adm2Arr.includes(element[config.Map.Admin2]) ? null : adm2Arr.push(element[config.Map.Admin2]);
+        adm2CodesArr.includes(element[config["Map"]["Admin2_code"]]) ? null : adm2CodesArr.push(element[config["Map"]["Admin2_code"]]);
     });
 
     generateKeyFigures();
@@ -16,11 +18,27 @@ function initFeedbackHomePage() {
 
     // gender piechart
     var genderData = getDataForChart("Pie", "Gender");
-    genderPieChart = generatePieChart("genderPieChart", genderData);
+    // genderPieChart = generatePieChart("genderPieChart", genderData);
+    genderPieChart = c3.generate({
+        bindto: '#genderPieChart',
+        size: {
+            height: pieChartHeight
+        },
+        data: {
+            columns: genderData,
+            type: 'pie',
+            onclick: function(d) {
+                console.log(d);
+            }
+        },
+        color: {
+            pattern: pieChartColorRange
+        },
+    });
 
     // population group bar chart
     var popData = getDataForChart("Bar", "Population");
-    popGroupsBarChart = generateBarChart("popGroupChart", popData);
+    popGroupsBarChart = generateBarChart("popGroupChart", popData, 250);
 
 
     // Emergency piechart
@@ -35,17 +53,16 @@ function initFeedbackHomePage() {
 
     // category bar chart
     var categoryData = getDataForChart("Bar", "Category");
-    console.log(categoryData)
-
     categoryBarChart = generateBarChart("categoryBarChart", categoryData);
 
     // topic bar chart
-    // var topicData = getDataForChart("Bar", "Population");
-    topicBarChart = generateBarChart("topicBarChart", categoryData);
+    var topicData = getDataForChart("Bar", "Code");
+    topicBarChart = generateBarChart("topicBarChart", topicData);
 
+    mapChoroplethData = generateDataForMap();
+    // display map
+    initiateMap();
 
-
-    $('#home').removeClass('hidden');
 } //initFeedbackHomePage
 
 

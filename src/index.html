@@ -22,6 +22,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.js"></script>
     <script src="https://d3js.org/d3.v5.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://d3-legend.susielu.com/d3-legend.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js"></script>
     <link href="css/styles.css" rel="stylesheet" />
@@ -45,19 +46,19 @@
                     <div class="collapse navbar-collapse" id="navigationPages">
                         <ul class="navbar-nav ml-md-auto">
                             <li class="nav-item navSite">
-                                <a class="nav-link" href="#" value="context">Context</a>
+                                <a class="nav-link disabled" href="#" value="context">Context</a>
                             </li>
                             <li class="nav-item navSite">
-                                <a class="nav-link" href="#" value="behaviors">Behaviors</a>
+                                <a class="nav-link disabled" href="#" value="behaviors">Behaviors</a>
                             </li>
                             <li class="nav-item navSite">
-                                <a class="nav-link" href="#" value="activities">Activities</a>
+                                <a class="nav-link disabled" href="#" value="activities">Activities</a>
                             </li>
                             <li class="nav-item  navSite active">
                                 <a class="nav-link" href="#" value="feedback">Feedback</a>
                             </li>
                             <li class="nav-item navSite">
-                                <a class="nav-link" href="#" value="reports">Reports</a>
+                                <a class="nav-link disabled" href="#" value="reports">Reports</a>
                             </li>
                         </ul>
                     </div>
@@ -93,7 +94,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <h4>Filters</h4>
+                                <h4>Filters <span><button class="btn btn-tertiary" id="fResetAll">Reset all</button></span></h4>
 
                                 <span class="filters dropdownSelect">
 									<label for="">Emergency</label><br/>
@@ -131,16 +132,16 @@
                                 <a class="nav-link active" href="#" value="home">Home</a>
                             </li>
                             <li class="nav-item navFeedback">
-                                <a class="nav-link" href="#" value="regions">Regions</a>
+                                <a class="nav-link disabled" href="#" value="regions">Regions</a>
                             </li>
                             <li class="nav-item navFeedback">
-                                <a class="nav-link" href="#" value="organisation">Organisation</a>
+                                <a class="nav-link disabled" href="#" value="organisation">Organisation</a>
                             </li>
                             <li class="nav-item navFeedback">
-                                <a class="nav-link" href="#" value="feedbacks">Feedbacks</a>
+                                <a class="nav-link disabled" href="#" value="feedbacks">Feedbacks</a>
                             </li>
                             <li class="nav-item navFeedback">
-                                <a class="nav-link" href="#" value="reports">Reports</a>
+                                <a class="nav-link disabled" href="#" value="reports">Reports</a>
                             </li>
                         </ul>
 
@@ -164,20 +165,33 @@
                                     <div class="col-md-4">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <h6>Topic Bar chart (Top 5)</h6>
+                                                <h6>Topic Bar chart (Top 10)</h6>
                                                 <div id="topicBarChart"></div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <h6>Category Bar chart (Top 5)</h6>
+                                                <h6>Category Bar chart (Top 10)</h6>
                                                 <div id="categoryBarChart"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-8" id="mapping">
                                         <h6>Geographic area</h6>
-                                        <div id="map"></div>
+                                        <div class="row">
+                                            <div id="map"></div>
+                                            <div class="zoom-controls">
+                                                <button id="zoom_in">+</button>
+                                                <button id="zoom_out">-</button>
+                                            </div>
+                                            <p class="small">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Natus placeat sed, totam tempora numquam facere quas dolore consectetur quasi quibusdam reiciendis accusamus ducimus suscipit, hic possimus quo, in provident
+                                                assumenda?
+                                            </p>
+                                        </div>
+                                        <div class="row">
+                                            <h6>Timeline</h6>
+                                            <div id="timeline"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
