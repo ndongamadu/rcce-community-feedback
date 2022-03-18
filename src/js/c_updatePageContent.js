@@ -40,8 +40,6 @@ function getFilteredDataFromSelection() {
     var emergencySelected = $('#emergencySelect').val();
     var feedbackTypeSelected = $('#feedbackTypeSelect').val();
 
-    // console.log("====before filtered data===")
-    // console.log(data)
     if (emergencySelected != "all") {
         data = data.filter(function(d) {
             return d[config['Framework']['Emergency']] == emergencySelected;
@@ -76,28 +74,51 @@ function updateChartsFromSelection(dataArg) {
 
     var data = (dataArg == undefined) ? getFilteredDataFromSelection() : dataArg;
 
+    // console.log(data)
+
     // update charts 
     var newData_gender = getDataForChart("Pie", "Gender", data);
-    genderPieChart.load({ columns: newData_gender });
+    genderPieChart.load({
+        columns: newData_gender,
+        unload: true
+    });
 
     var newData_pop = getDataForChart("Bar", "Population", data);
-    popGroupsBarChart.load({ columns: newData_pop });
+    popGroupsBarChart.load({
+        columns: newData_pop,
+        unload: true
+    });
 
     var newData_emergency = getDataForChart("Pie", "Emergency", data);
-    emergencyPiechart.load({ columns: newData_emergency });
+    emergencyPiechart.load({
+        columns: newData_emergency,
+        unload: true
+    });
 
     var newData_channel = getDataForChart("Pie", "Channel", data);
-    channelPieChart.load({ columns: newData_channel });
+    channelPieChart.load({
+        columns: newData_channel,
+        unload: true
+    });
 
     var newData_feedback = getDataForChart("Pie", "Type", data);
-    feedbackPieChart.load({ columns: newData_feedback });
+    feedbackPieChart.load({
+        columns: newData_feedback,
+        unload: true
+    });
     // console.log(newData_feedback)
 
     var newData_topic = getDataForChart("Bar", "Code", data);
-    topicBarChart.load({ columns: newData_topic });
+    topicBarChart.load({
+        columns: newData_topic,
+        unload: true
+    });
 
     var newData_cat = getDataForChart("Bar", "Category", data);
-    categoryBarChart.load({ columns: newData_cat });
+    categoryBarChart.load({
+        columns: newData_cat,
+        unload: true
+    });
 
     // update key figures too
 
