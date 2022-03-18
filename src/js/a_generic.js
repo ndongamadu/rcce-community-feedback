@@ -18,6 +18,9 @@ let organisationsArr = [];
 let emergenciesFilterArr = ["All selected"],
     feedbackTypesArr = ["All selected"];
 
+let filteredFromPieChartGender = 'all',
+    filteredFromBarChartPop = 'all';
+
 let genderPieChart,
     popGroupsBarChart;
 

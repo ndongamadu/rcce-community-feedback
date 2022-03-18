@@ -28,7 +28,8 @@ function initFeedbackHomePage() {
             columns: genderData,
             type: 'pie',
             onclick: function(d) {
-                console.log(d);
+                filteredFromPieChartGender = d.name;
+                updateAll();
             }
         },
         color: {
@@ -38,7 +39,47 @@ function initFeedbackHomePage() {
 
     // population group bar chart
     var popData = getDataForChart("Bar", "Population");
-    popGroupsBarChart = generateBarChart("popGroupChart", popData, 250);
+    //popGroupsBarChart = generateBarChart("popGroupChart", popData, 250);
+    popGroupsBarChart = c3.generate({
+        bindto: '#popGroupChart',
+        size: {
+            height: 250
+        },
+        data: {
+            x: 'x',
+            columns: popData,
+            type: 'bar',
+            onclick: function(d) {
+                filteredFromBarChartPop = popData[0][d.x + 1];
+                updateAll();
+            }
+        },
+        color: {
+            pattern: [primaryColor]
+        },
+        axis: {
+            // rotated: true,
+            x: {
+                type: 'category',
+                tick: {
+                    centered: true,
+                    outer: false
+                }
+            },
+            y: {
+                tick: {
+                    centered: true,
+                    outer: false,
+                    fit: true,
+                    count: 5,
+                    format: d3.format('d')
+                }
+            }
+        },
+        legend: {
+            show: false
+        }
+    });
 
 
     // Emergency piechart
