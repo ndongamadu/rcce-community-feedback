@@ -19,6 +19,9 @@ let organisationsArr = [];
 let emergenciesFilterArr = ["All selected"],
     feedbackTypesArr = ["All selected"];
 
+let filteredFromPieChartGender = 'all',
+    filteredFromBarChartPop = 'all';
+
 let genderPieChart,
     popGroupsBarChart;
 
@@ -432,7 +435,8 @@ function initFeedbackHomePage() {
             columns: genderData,
             type: 'pie',
             onclick: function(d) {
-                console.log(d);
+                filteredFromPieChartGender = d.name;
+                updateAll();
             }
         },
         color: {
@@ -442,7 +446,47 @@ function initFeedbackHomePage() {
 
     // population group bar chart
     var popData = getDataForChart("Bar", "Population");
-    popGroupsBarChart = generateBarChart("popGroupChart", popData, 250);
+    //popGroupsBarChart = generateBarChart("popGroupChart", popData, 250);
+    popGroupsBarChart = c3.generate({
+        bindto: '#popGroupChart',
+        size: {
+            height: 250
+        },
+        data: {
+            x: 'x',
+            columns: popData,
+            type: 'bar',
+            onclick: function(d) {
+                filteredFromBarChartPop = popData[0][d.x + 1];
+                updateAll();
+            }
+        },
+        color: {
+            pattern: [primaryColor]
+        },
+        axis: {
+            // rotated: true,
+            x: {
+                type: 'category',
+                tick: {
+                    centered: true,
+                    outer: false
+                }
+            },
+            y: {
+                tick: {
+                    centered: true,
+                    outer: false,
+                    fit: true,
+                    count: 5,
+                    format: d3.format('d')
+                }
+            }
+        },
+        legend: {
+            show: false
+        }
+    });
 
 
     // Emergency piechart
@@ -533,6 +577,17 @@ function getFilteredDataFromSelection() {
             return d[config["Map"]["Admin2"]] == selectedCountryFromMap;
         })
     }
+    if (filteredFromPieChartGender != "all") {
+        data = data.filter(function(d) {
+            return d[config["Framework"]["Gender"]] == filteredFromPieChartGender;
+        })
+    }
+
+    if (filteredFromBarChartPop != "all") {
+        data = data.filter(function(d) {
+            return d[config["Framework"]["Population"]] == filteredFromBarChartPop;
+        })
+    }
 
     return data;
 } //getFilteredDataFromSelection
@@ -542,31 +597,49 @@ function updateChartsFromSelection(dataArg) {
     var data = (dataArg == undefined) ? getFilteredDataFromSelection() : dataArg;
 
     // update charts 
+    var newData_gender = getDataForChart("Pie", "Gender", data);
+    genderPieChart.load({ columns: newData_gender });
+
+    var newData_pop = getDataForChart("Bar", "Population", data);
+    popGroupsBarChart.load({ columns: newData_pop });
+
     var newData_emergency = getDataForChart("Pie", "Emergency", data);
-    // d3.select('#Emergency svg').classed('hidden', false);
-    emergencyPiechart.load({ columns: newData_emergency, unload: true });
-    // emergencyPiechart.resize({ height: pieChartHeight });
+    emergencyPiechart.load({ columns: newData_emergency });
 
     var newData_channel = getDataForChart("Pie", "Channel", data);
-    channelPieChart.load({ columns: newData_channel, unload: true });
+    channelPieChart.load({ columns: newData_channel });
 
     var newData_feedback = getDataForChart("Pie", "Type", data);
-    feedbackPieChart.load({ columns: newData_feedback, unload: true });
+    feedbackPieChart.load({ columns: newData_feedback });
     // console.log(newData_feedback)
 
     var newData_topic = getDataForChart("Bar", "Code", data);
-    topicBarChart.load({ columns: newData_topic, unload: true });
+    topicBarChart.load({ columns: newData_topic });
 
     var newData_cat = getDataForChart("Bar", "Category", data);
-    categoryBarChart.load({ columns: newData_cat, unload: true });
+    categoryBarChart.load({ columns: newData_cat });
+
+    // update key figures too
 
 } //updateChartsFromSelection
+
+function updateAll() {
+    var data = getFilteredDataFromSelection();
+    updateChartsFromSelection(data);
+
+    // update map choropleth
+    choroplethMap(data);
+}
 
 function resetAllFilters() {
     Adm2SelectedFromMap = false;
     selectedCountryFromMap = "all";
     $('#emergencySelect').val('all');
     $('#feedbackTypeSelect').val('all');
+    //reset chart gender selection
+    filteredFromPieChartGender = 'all';
+    filteredFromBarChartPop = 'all';
+
     var data = getFilteredDataFromSelection();
     updateChartsFromSelection(data);
     choroplethMap();
