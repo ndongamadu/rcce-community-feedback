@@ -167,7 +167,7 @@ h6 {
 }
 
 .page-desc {
-    marging-top: 10px;
+    margin-top: 10px;
     padding: 5px;
     font-size: 0.73em;
     color: #5b5b5b;
@@ -238,7 +238,7 @@ h6 {
 
 .feedback .sidebar {
     flex: 1;
-    margin: 3px;
+    padding: 0 15px 0 15px;
 }
 
 .feedback .panel {
@@ -321,11 +321,13 @@ h6 {
     font-size: 0.83em;
 }
 
-.submenu .navFeedback a {
+.submenu .navFeedback a,
+.navBehaviors a {
     color: #bcbcbc;
 }
 
-.submenu .navFeedback a:active {
+.submenu .navFeedback a:active,
+.navBehaviors a:active {
     color: #000;
 }
 
@@ -349,6 +351,13 @@ h6 {
 
 .section {
     margin-bottom: 20px;
+}
+
+.c3-legend-item,
+g.tick {
+    font-family: "Open Source", sans-serif;
+    font-size: 1.1em;
+    font-weight: 300;
 }
 
 .chart-title {
@@ -388,9 +397,9 @@ h6 {
     .zoom-controls {
         position: absolute;
         // left: 45px;
-        bottom: 5px;
-        right: 10px;
-        // top: 405px;
+        // bottom: 5px;
+        right: 15px;
+        top: 410px;
         display: grid;
         grid-gap: 5px;
         button {
@@ -439,4 +448,143 @@ h6 {
     .othercharts {
         flex-direction: column;
     }
+}
+
+// Reports
+.reports {
+    display: flex;
+}
+
+.reports .sidebar {
+    flex: 1;
+    padding: 0 15px 0 15px;
+}
+
+.reports .panel {
+    flex: 3;
+}
+
+.report-filters {
+    display: flex;
+    gap: 20px;
+    padding: 10px;
+    justify-content: center;
+}
+
+#searchInput {
+    min-width: 250px;
+    padding-right: 20px;
+}
+
+#searchInput input {
+    font-size: 0.78rem;
+}
+
+.tagFiltersReport {
+    padding: 0 20px 0 20px;
+    .btn {
+        outline: none;
+        display: block;
+        // padding: 2px 8px 2px 8px;
+        margin: 2px;
+        font-size: 0.78rem;
+        line-height: 1.5;
+        color: #fff;
+    }
+    .tag-all {
+        background: #9d9fa2;
+        border: solid 1px #9d9fa2;
+    }
+    .tag-tag1,
+    .tag-tag1,
+    .tag-tag2,
+    .tag-tag3,
+    .tag-tag4 {
+        background: #2f9c67;
+        border: solid 1px #2f9c67;
+    }
+    .active {
+        background: #9ec8ae !important;
+        border: solid 1px #9d9fa2;
+    }
+}
+
+table.dataTable thead th,
+table.dataTable thead td {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    padding: 5px 10px;
+    border-bottom: 1px solid #ccc;
+    text-transform: uppercase;
+}
+
+table.dataTable tbody tr {
+    vertical-align: top;
+    padding-top: 5px;
+    font-size: 0.73rem;
+}
+
+// Behaviors page
+.behaviors {
+    display: flex;
+}
+
+.behaviors .sidebar {
+    flex: 1;
+    padding: 0 15px 0 15px;
+}
+
+.behaviors .panel {
+    flex: 3;
+}
+
+.sidebar .definitions {
+    padding: 10px 0 10px 0;
+    ul {
+        p {
+            margin: 0;
+            padding: 5px 0 5px 0;
+        }
+        h5 {
+            color: #5b5b5b;
+            margin-bottom: 0;
+        }
+    }
+}
+
+.sidebar .keyfigures {
+    .statBehaviors,
+    .statBehaviorsDate {
+        #label {
+            font-size: 0.8rem;
+        }
+        #num {
+            font-size: 1.7rem;
+            min-height: 0;
+        }
+    }
+}
+
+.panel .behaviorsFilters {
+    display: flex;
+    padding-bottom: 10px;
+    gap: 10px;
+    span {
+        font-size: 0.8rem;
+        line-height: 1.5;
+    }
+}
+
+// Situation page
+.situation {
+    display: flex;
+}
+
+.situation .sidebar {
+    flex: 1;
+    padding: 0 15px 0 15px;
+}
+
+.situation .panel {
+    flex: 3;
 }

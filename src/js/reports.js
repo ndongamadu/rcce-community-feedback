@@ -3,19 +3,35 @@
  */
 
 let reportsUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQerZvzh2FT_wxMVxYrKXQpEf_b2-8e5ATvhFHqaSdZE-MYq82EiRXNzzZu5vUKwcipc75aOOejTJ0y/pub?gid=0&single=true&output=csv';
+let configFile = 'config/config.json';
 
 let reportsData;
+let config;
+let datatableRports;
+let tagsArr = [];
 
 $(document).ready(function() {
     function getData() {
         Promise.all([
-            d3.csv(reportsUrl)
+            d3.csv(reportsUrl),
+            d3.json(configFile),
         ]).then(function(data) {
             reportsData = data[0];
-            console.log(reportsData)
-                /**
-                 * functions to show the vis
-                 */
+            config = data[1];
+
+            tagsArr = config.Reports.Tags;
+
+            // reportsData.forEach(element => {
+            //     var tags = getTagsAsArray(element['Keywords']);
+            //     for (let index = 0; index < tags.length; index++) {
+            //         const item = tags[index];
+            //         tagsArr.includes(item) ? null : tagsArr.push(item);
+            //     }
+            // });
+            /**
+             * functions to show the vis
+             */
+            generateTags();
             generateReportDataTable();
 
             //remove loader and show vis
@@ -25,11 +41,13 @@ $(document).ready(function() {
     } // getData
 
     getData();
+
 });
+
 
 function generateReportDataTable() {
     var dtData = getDataTableData();
-    datatable = $('#datatable').DataTable({
+    datatableRports = $('#datatable').DataTable({
         data: dtData,
         "columns": [{
                 "className": 'details-control',
@@ -83,6 +101,8 @@ function generateReportDataTable() {
         //         }
         //     }]
         // }
+
+
     });
 
     // $('#datatable tbody').on('click', 'td.details-control', function() {
@@ -106,7 +126,16 @@ function generateReportDataTable() {
 
     //     }
     // });
+
+
 } //generateReportDataTable
+
+function updateDataTable(data = reportsData) {
+    var dt = getDataTableData(data);
+    $('#datatable').dataTable().fnClearTable();
+    $('#datatable').dataTable().fnAddData(dt);
+
+} //updateDataTable
 
 function getDataTableData(data = reportsData) {
     var dt = [];
@@ -128,6 +157,64 @@ function getDataTableData(data = reportsData) {
     });
     return dt;
 } //getDataTableData
+
+$('#searchInput').keyup(function() {
+    datatableRports.search($('#searchInput').val()).draw();
+});
+
+
+function generateTags() {
+    var tagsToDisplay = '<label><strong>Filter table by: </strong></label><label><button type="button" class="btn tagFilter tag-all active" id="all" value="all">All</button></label>';
+    for (let index = 0; index < tagsArr.length; index++) {
+        const tag = tagsArr[index],
+            tagId = String(tagsArr[index]).toLowerCase(),
+            classname = 'tag-' + tagId;
+        tagsToDisplay += '<label><button type="button" class="btn tagFilter ' + classname + '" id="' + tagId + '" value ="' + tagId + '">' + tag + '</button></label>';
+
+    }
+    $('.tagFiltersReport').html('');
+    $('.tagFiltersReport').append(tagsToDisplay);
+
+    var tagButtons = document.getElementsByClassName("tagFilter");
+    for (var i = 0; i < tagButtons.length; i++) {
+        tagButtons[i].addEventListener('click', clickButton);
+    }
+
+} //generateTags
+
+function clickButton() {
+    $('.btn').removeClass('active');
+    var tagSelected = this.value;
+    var data = reportsData;
+
+    if (tagSelected == "all") {
+        updateDataTable(data);
+
+    } else {
+        var filteredData = data.filter(function(d) {
+            var tagArr = getTagsAsArray(d[config.Reports.TagColumn]);
+            return tagArr.includes(tagSelected) ? d : null;
+        });
+        updateDataTable(filteredData);
+    }
+
+    $(this).toggleClass('active');
+
+} //clickButton
+
+function getTagsAsArray(item) {
+    var items = [];
+    var arr = item.split(",");
+    var trimedArr = arr.map(x => x.trim());
+    for (let index = 0; index < trimedArr.length; index++) { //remove empty elements
+        if (trimedArr[index]) {
+            items.push(trimedArr[index]);
+        }
+    }
+    return items;
+
+} //getTagsAsArray
+
 
 /**
  * End Reports Page

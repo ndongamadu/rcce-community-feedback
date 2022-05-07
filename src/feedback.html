@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 
     <!-- scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -22,6 +23,8 @@
     <script src="https://d3-legend.susielu.com/d3-legend.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <script src="https://momentjs.com/downloads/moment.min.js"></script>
     <link href="css/styles.css" rel="stylesheet" />
     <title>Community Response Hub</title>
 
@@ -71,14 +74,18 @@
 
         <!-- Navigation to Landing page -->
         <div class="row navPage" id="feedback">
-            <div class="col-md-12 feedback">
+            <div class="loader">
+                <div class="sp sp-circle"></div>
+                Loading data...
+            </div>
+            <div class="col-md-12 feedback" id="main">
 
                 <div class="sidebar">
                     <div class="page-title">
                         <h4>Feedback</h4>
                     </div>
                     <p class="page-desc">
-                        Feedbacks are collected and compiled through an feedback framework available here. To learn more about it, contact us.
+                        Feedbacks are collected and compiled through a feedback framework available here. To learn more about it, contact us.
                     </p>
                     <div class="keyfigures">
                         <span class="key-figure statFeedback">
@@ -172,8 +179,13 @@
                                     <button id="zoom_in">+</button>
                                     <button id="zoom_out">-</button>
                                 </div>
-                                <p class="small">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Natus placeat sed, totam tempora numquam facere quas dolore consectetur quasi quibusdam reiciendis accusamus ducimus suscipit, hic possimus quo, in provident assumenda?
+                                <p class="small">
+                                    The boundaries, names and designations used in this map do not imply official endorsement, nor express a political opinion on the part of the Collective Service, and are without prejudice to claims of sovereignty over the territories mentioned.
                                 </p>
+                                <div class="colmd4">
+                                    <div class="chart-title">Timeline</div>
+                                    <div id="timeline"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
