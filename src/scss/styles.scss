@@ -554,7 +554,9 @@ table.dataTable tbody tr {
 
 .sidebar .keyfigures {
     .statBehaviors,
-    .statBehaviorsDate {
+    .statBehaviorsDate,
+    .statContext,
+    .statContextNum {
         #label {
             font-size: 0.8rem;
         }
@@ -587,4 +589,69 @@ table.dataTable tbody tr {
 
 .situation .panel {
     flex: 3;
+}
+
+.contextCharts {
+    display: flex;
+    flex-direction: column;
+    .sunburst {
+        display: flex;
+        // justify-content: center;
+        #radial {
+            flex: 1;
+        }
+        .legends {
+            display: flex;
+            flex-direction: column;
+            // justify-content: end;
+            // align-items: end;
+            ul {
+                padding: 0;
+                list-style-type: none;
+                font-size: 0.7rem;
+            }
+            #impactLegend {
+                font-size: 0.7rem;
+                .ordinalLegend {
+                    height: 100px;
+                }
+            }
+        }
+    }
+    .alert {
+        padding: 5px;
+        color: #fff;
+        border: 0;
+        border-radius: 0.5rem;
+    }
+    //health
+    .tag-health.Decrease {
+        background-color: #209770;
+    }
+    .tag-health.Increase {
+        background-color: #dd4465;
+    }
+    .tag-health.Neutral {
+        background-color: #eed9c4;
+    }
+    //interventions
+    .tag-Interventions.Enable {
+        background-color: #47b983;
+    }
+    .tag-Interventions.Hinder {
+        background-color: #e76889;
+    }
+    .tag-Interventions.Neutral {
+        background-color: #faf0e6;
+    }
+    //outbreak
+    .tag-Outbreak.Facilitate {
+        background-color: #0c5a3d;
+    }
+    .tag-Outbreak.Discourage {
+        background-color: #ca2142;
+    }
+    .tag-Outbreak.Neutral {
+        background-color: #c7b099;
+    }
 }
