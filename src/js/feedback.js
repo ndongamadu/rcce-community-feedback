@@ -3,9 +3,6 @@
  * Feedback Page
  */
 
-// let config = {
-
-// };
 
 let primaryColor = '#204669',
     secondaryColor = '#a6b5c3',
@@ -30,6 +27,7 @@ let emergencyPiechart,
 
 let topicBarChart,
     categoryBarChart;
+let timelineChart;
 
 let barChartHeight = 350;
 let pieChartHeight = 200;
@@ -140,8 +138,48 @@ function generateBarChart(bind, data, height = barChartHeight) {
     return chart;
 } //generateBarChart
 
-function generateTimeline() {
-
+function generateTimeline(data) {
+    var chart = c3.generate({
+        bindto: '#timeline',
+        data: {
+            x: 'x',
+            xFormat: '%d/%m/%Y',
+            type: 'area',
+            columns: data
+        },
+        // color: {
+        //     pattern: mainColor
+        // },
+        axis: {
+            x: {
+                type: 'timeseries',
+                tick: {
+                    // centered: true,
+                    outer: false,
+                    fit: true,
+                    format: '%m-%Y'
+                }
+            },
+            y: {
+                show: true,
+                tick: {
+                    centered: true,
+                    outer: false,
+                    fit: true,
+                    count: 3,
+                    format: d3.format('d')
+                }
+            }
+        },
+        size: {
+            height: 190
+        },
+        padding: { right: 20 },
+        legend: {
+            hide: true
+        }
+    });
+    return chart;
 } //generateTimeline
 
 // return calculated and pie/bar chart formatted dataset
@@ -162,6 +200,15 @@ function getDataForChart(chartType, dataColumn, data = communityFeedbackData) {
             arr.push(element.key, element.value);
             colonnes.push(arr);
         });
+    } else if (chartType == "timeline") {
+        xArr.push('x');
+        yArr.push('#feedback');
+        data.forEach(element => {
+            xArr.push(element.key);
+            yArr.push(element.value);
+        });
+        colonnes.push(xArr);
+        colonnes.push(yArr);
     } else {
         xArr.push('x');
         yArr.push('value');
@@ -206,10 +253,11 @@ function generateDataForMap(CFdata = communityFeedbackData) {
     return data;
 } //generateDataForMap
 
+// Feedbach map
+
 let mapChoroplethData = [];
 let isMobile = $(window).width() < 767 ? true : false;
 let g, mapsvg, projection, width, height, zoom, path;
-let viewportWidth = document.getElementById('mapping').offsetWidth; //window.innerWidth;
 let currentZoom = 1;
 let mapClicked = false;
 let selectedCountryFromMap = "all";
@@ -226,15 +274,15 @@ let mapScale = d3.scaleQuantize()
     .range(mapColorRange);
 
 function initiateMap() {
-    width = viewportWidth - 10;
-    // height = (isMobile) ? 400 : 500;
-    height = 500;
-    var mapScale = width / Math.PI; //(isMobile) ? width / 3.5 : width / 23;4587526
-    var mapCenter = (isMobile) ? [12, 12] : [28, -20.1]; // deplace la carte vertical, horizontal
+    width = (isMobile) ? 400 : 830;
+    height = (isMobile) ? 400 : 500;
+    // height = 500;
+    var mapScale = (isMobile) ? width * 3.7 * 2 : width * 3.7
+    var mapCenter = [28, -20.1]; //(isMobile) ? [12, 12] : [28, -20.1]; // deplace la carte vertical, horizontal
 
     projection = d3.geoMercator()
         .center(mapCenter)
-        .scale(3000)
+        .scale(mapScale) //3000
         .translate([width / 2.9, height / 1.6]);
 
     path = d3.geoPath().projection(projection);
@@ -338,8 +386,6 @@ function zoomed() {
     }
 }
 
-
-
 // elevalute each map unit's number of feedbacks and colors it accordingly 
 function choroplethMap(CFdata = communityFeedbackData) {
     var mapData = (CFdata == undefined) ? mapChoroplethData : generateDataForMap(CFdata);
@@ -398,9 +444,307 @@ function sortNestedData(a, b) {
     return 0;
 } //sortNestedData
 
+function initFeedbackHomePage() {
+    filteredCommunityFeedbackData.forEach(element => {
+        emergenciesFilterArr.includes(element[config['Framework']['Emergency']]) ? null : emergenciesFilterArr.push(element[config['Framework']["Emergency"]]);
+        feedbackTypesArr.includes(element[config['Framework']["Type"]]) ? null : feedbackTypesArr.push(element[config['Framework']["Type"]]);
+        adm2Arr.includes(element[config.Map.Admin2]) ? null : adm2Arr.push(element[config.Map.Admin2]);
+        adm2CodesArr.includes(element[config["Map"]["Admin2_code"]]) ? null : adm2CodesArr.push(element[config["Map"]["Admin2_code"]]);
+    });
+
+    generateKeyFigures();
+    generateEmergenciesDropdown();
+    generateFeedbackTypesDropdown();
+
+    var tlData = getDataForChart("timeline", 'Date');
+    console.log(tlData)
+    timelineChart = generateTimeline(tlData);
+    // gender piechart
+    var genderData = getDataForChart("Pie", "Gender");
+    // genderPieChart = generatePieChart("genderPieChart", genderData);
+    genderPieChart = c3.generate({
+        bindto: '#genderPieChart',
+        size: {
+            height: pieChartHeight
+        },
+        data: {
+            columns: genderData,
+            type: 'pie',
+            onclick: function(d) {
+                filteredFromPieChartGender = d.name;
+                updateAll();
+            }
+        },
+        color: {
+            pattern: pieChartColorRange
+        },
+    });
+
+    // population group bar chart
+    var popData = getDataForChart("Bar", "Population");
+    //popGroupsBarChart = generateBarChart("popGroupChart", popData, 250);
+    popGroupsBarChart = c3.generate({
+        bindto: '#popGroupChart',
+        size: {
+            height: 250
+        },
+        data: {
+            x: 'x',
+            columns: popData,
+            type: 'bar',
+            onclick: function(d) {
+                filteredFromBarChartPop = popData[0][d.x + 1];
+                updateAll();
+            }
+        },
+        color: {
+            pattern: [primaryColor]
+        },
+        axis: {
+            // rotated: true,
+            x: {
+                type: 'category',
+                tick: {
+                    centered: true,
+                    outer: false
+                }
+            },
+            y: {
+                tick: {
+                    centered: true,
+                    outer: false,
+                    fit: true,
+                    count: 5,
+                    format: d3.format('d')
+                }
+            }
+        },
+        legend: {
+            show: false
+        }
+    });
 
 
-/**
- * End Feedback Page
- */
-// =============================== *** End File a_generic ***  ===============================
+    // Emergency piechart
+    var emergencyData = getDataForChart("Pie", "Emergency");
+    emergencyPiechart = generatePieChart("emergencyPieChart", emergencyData);
+    // feedbakc pie chart
+    var feedbackData = getDataForChart("Pie", "Type");
+    feedbackPieChart = generatePieChart("feedbackPieChart", feedbackData);
+    // channel pie chart
+    var channelData = getDataForChart("Pie", "Channel");
+    channelPieChart = generatePieChart("channelPieChart", channelData);
+
+    // category bar chart
+    var categoryData = getDataForChart("Bar", "Category");
+    categoryBarChart = generateBarChart("categoryBarChart", categoryData);
+
+    // topic bar chart
+    var topicData = getDataForChart("Bar", "Code");
+    topicBarChart = generateBarChart("topicBarChart", topicData);
+
+    mapChoroplethData = generateDataForMap();
+    // display map
+    initiateMap();
+
+} //initFeedbackHomePage
+
+
+
+//Click event handler for nav-items
+$('.navFeedback').on('click', function() {
+    $('.navFeedback a').removeClass('active');
+    $('.navigation').addClass('hidden');
+
+
+    //Add active class to the clicked item
+    var nav = $('a', this).attr('value');
+    console.log("nav to activated: " + nav)
+    $('#' + nav).removeClass('hidden');
+    $('a', this).addClass('active');
+});
+
+function getFilteredDataFromSelection() {
+    var data = communityFeedbackData;
+    var emergencySelected = $('#emergencySelect').val();
+    var feedbackTypeSelected = $('#feedbackTypeSelect').val();
+
+    if (emergencySelected != "all") {
+        data = data.filter(function(d) {
+            return d[config['Framework']['Emergency']] == emergencySelected;
+        })
+    }
+    if (feedbackTypeSelected != "all") {
+        data = data.filter(function(d) {
+            return d[config['Framework']['Type']] == feedbackTypeSelected;
+        })
+    }
+    if (selectedCountryFromMap != "all") {
+        data = data.filter(function(d) {
+            return d[config["Map"]["Admin2"]] == selectedCountryFromMap;
+        })
+    }
+    if (filteredFromPieChartGender != "all") {
+        data = data.filter(function(d) {
+            return d[config["Framework"]["Gender"]] == filteredFromPieChartGender;
+        })
+    }
+
+    if (filteredFromBarChartPop != "all") {
+        data = data.filter(function(d) {
+            return d[config["Framework"]["Population"]] == filteredFromBarChartPop;
+        })
+    }
+
+    return data;
+} //getFilteredDataFromSelection
+
+function updateChartsFromSelection(dataArg) {
+
+    var data = (dataArg == undefined) ? getFilteredDataFromSelection() : dataArg;
+
+    // console.log(data)
+
+    // update charts 
+    var newData_gender = getDataForChart("Pie", "Gender", data);
+    genderPieChart.load({
+        columns: newData_gender,
+        unload: true
+    });
+
+    var newData_pop = getDataForChart("Bar", "Population", data);
+    popGroupsBarChart.load({
+        columns: newData_pop,
+        unload: true
+    });
+
+    var newData_emergency = getDataForChart("Pie", "Emergency", data);
+    emergencyPiechart.load({
+        columns: newData_emergency,
+        unload: true
+    });
+
+    var newData_channel = getDataForChart("Pie", "Channel", data);
+    channelPieChart.load({
+        columns: newData_channel,
+        unload: true
+    });
+
+    var newData_feedback = getDataForChart("Pie", "Type", data);
+    feedbackPieChart.load({
+        columns: newData_feedback,
+        unload: true
+    });
+    // console.log(newData_feedback)
+
+    var newData_topic = getDataForChart("Bar", "Code", data);
+    topicBarChart.load({
+        columns: newData_topic,
+        unload: true
+    });
+
+    var newData_cat = getDataForChart("Bar", "Category", data);
+    categoryBarChart.load({
+        columns: newData_cat,
+        unload: true
+    });
+
+    // update key figures too
+
+} //updateChartsFromSelection
+
+function updateAll() {
+    var data = getFilteredDataFromSelection();
+    updateChartsFromSelection(data);
+
+    // update map choropleth
+    choroplethMap(data);
+}
+
+function resetAllFilters() {
+    Adm2SelectedFromMap = false;
+    selectedCountryFromMap = "all";
+    $('#emergencySelect').val('all');
+    $('#feedbackTypeSelect').val('all');
+    //reset chart gender selection
+    filteredFromPieChartGender = 'all';
+    filteredFromBarChartPop = 'all';
+
+    var data = getFilteredDataFromSelection();
+    updateChartsFromSelection(data);
+    choroplethMap();
+
+}
+
+$('#emergencySelect').on("change", function(d) {
+    // reset map selection
+    selectedCountryFromMap = "all"; // and the boolean too
+
+    var data = getFilteredDataFromSelection();
+    updateChartsFromSelection(data);
+
+    // update map choropleth
+    choroplethMap(data);
+});
+
+$('#feedbackTypeSelect').on("change", function(d) {
+    // reset map selection
+    selectedCountryFromMap = "all"; // and the boolean too
+
+    var data = getFilteredDataFromSelection();
+    updateChartsFromSelection(data);
+
+    // update map choropleth
+    choroplethMap(data);
+});
+
+$('#dateSelect').on("change", function(d) {
+    updateChartsFromSelection();
+});
+
+$('#fResetAll').on("click", function(d) {
+    resetAllFilters();
+})
+
+
+let geodataUrl = 'data/adm2.json';
+let dataURL = 'data/data.csv';
+let configFile = 'config/config.json';
+
+let geomData;
+let config;
+
+$(document).ready(function() {
+    function getData() {
+        Promise.all([
+            d3.json(geodataUrl),
+            d3.json(configFile),
+            d3.csv(dataURL),
+        ]).then(function(data) {
+            geomData = topojson.feature(data[0], data[0].objects.adm2);
+            config = data[1];
+            // data[2].forEach(element => {
+            //     element[config.Framework.Date] = parseDate(element[config.Framework.Date]);
+            // });
+            communityFeedbackData = data[2];
+            filteredCommunityFeedbackData = communityFeedbackData;
+
+
+            /**
+             * functions to show the vis
+             */
+            initFeedbackHomePage();
+            console.log(filteredCommunityFeedbackData)
+                //remove loader and show vis
+            $('.loader').hide();
+            $('#main').css('opacity', 1);
+        }); // then
+    } // getData
+
+    getData();
+});
+
+function parseDate(d) {
+    var dat = moment(d, ['DD/MM/YYYY']);
+    return new Date(dat.year(), dat.month(), dat.date());
+}

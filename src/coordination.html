@@ -8,11 +8,20 @@
     <!-- CSS only -->
     <link rel="icon" href="https://www.rcce-collective.net/wp-content/uploads/2021/04/android-chrome-192x192-1.png" sizes="192x192" />
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.css" />
 
     <!-- scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/39e5643f1a.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.js"></script>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://d3-legend.susielu.com/d3-legend.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js"></script>
     <link href="css/styles.css" rel="stylesheet" />
     <title>Community Response Hub</title>
 
@@ -61,14 +70,17 @@
         </div>
 
         <!-- Navigation to Landing page -->
-        <div class="row navPage" id="landing-page">
-            <div class="menu-home">
+        <div class="row navPage" id="feedback">
+            <!-- <div class="menu-home">
                 <div class="sitebranding">
                     <img src="assets/icons8-mind-map-90.png" alt="Communty Response Hub" height="90" />
                     <h1><strong>Community</strong> Response Hub</h1>Data hub for a Community-centered Public Health Response
                 </div>
+            </div> -->
+            <div class="col-md-12 feedback">
+                <h3>Coordination</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde sint porro, odio dicta autem ut voluptatum dolor fugiat minima mollitia magnam delectus nostrum expedita recusandae fuga perferendis. Tenetur, quae cumque?</p>
             </div>
-            <div class="col-md-12 landing"></div>
         </div>
     </div>
 
@@ -83,7 +95,7 @@
         </div>
     </div>
 
-    <!-- <script type="text/javascript" src="js/bundle.js"></script> -->
+    <script type="text/javascript" src="js/bundle.js"></script>
 </body>
 
 </html>

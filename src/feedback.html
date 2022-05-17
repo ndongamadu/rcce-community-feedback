@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <!-- CSS only -->
+    <link rel="icon" href="https://www.rcce-collective.net/wp-content/uploads/2021/04/android-chrome-192x192-1.png" sizes="192x192" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+
+    <!-- scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/39e5643f1a.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.js"></script>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://d3-legend.susielu.com/d3-legend.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <script src="https://momentjs.com/downloads/moment.min.js"></script>
+    <link href="css/styles.css" rel="stylesheet" />
+    <title>Community Response Hub</title>
+
+</head>
+
+<body>
+    <!-- Header & Navigation Menu -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigationPages">
+					<span class="navbar-toggler-icon"></span>
+					</button>
+                    <a class="navbar-brand" href="#" value="landing">
+                        <img src="assets/icons8-mind-map-90.png" alt="Communty Response Hub" height="30" /><strong>Community</strong> Response Hub</a>
+                    <div class="collapse navbar-collapse" id="navigationPages">
+
+                        <ul class="navbar-nav ml-md-auto">
+                            <li class="nav-item navSite">
+                                <a class="nav-link " href="index.html" value="landing">Home</a>
+                            </li>
+                            <li class="nav-item navSite">
+                                <a class="nav-link context" href="situation.html" value="context">Situation</a>
+                            </li>
+                            <li class="nav-item navSite">
+                                <a class="nav-link coordination" href="coordination.html" value="behaviors">Coordination</a>
+                            </li>
+                            <li class="nav-item navSite">
+                                <a class="nav-link activities" href="activities.html" value="activities">Activities</a>
+                            </li>
+                            <li class="nav-item navSite">
+                                <a class="nav-link behaviors" href="behaviors.html" value="behaviors">Behaviors</a>
+                            </li>
+                            <li class="nav-item navSite">
+                                <a class="nav-link feedback" href="feedback.html">Feedbacks</a>
+                            </li>
+                            <li class="nav-item navSite">
+                                <a class="nav-link reports" href="reports.html" value="reports">Reports</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Navigation to Landing page -->
+        <div class="row navPage" id="feedback">
+            <div class="loader">
+                <div class="sp sp-circle"></div>
+                Loading data...
+            </div>
+            <div class="col-md-12 feedback" id="main">
+
+                <div class="sidebar">
+                    <div class="page-title">
+                        <h4>Feedback</h4>
+                    </div>
+                    <p class="page-desc">
+                        Feedbacks are collected and compiled through a feedback framework available here. To learn more about it, contact us.
+                    </p>
+                    <div class="keyfigures">
+                        <span class="key-figure statFeedback">
+                            <h5 id="num"></h5>
+                            <h6 id="label"># feedbacks</h6>
+                        </span>
+                        <span class="key-figure statOrg">
+                            <h5 id="num"></h5>
+                            <h6 id="label"># orgs</h6>
+                        </span>
+                    </div>
+                    <h6>Filters <span><button class="btn btn-tertiary" id="fResetAll">Reset all</button></span></h6>
+                    <div class="selections">
+                        <span class="filters dropdownSelect">
+                            <label for="">Emergency</label>
+                            <select name="emergencySelect" id="emergencySelect"></select>
+                        </span>
+                        <span class="filters dropdownSelect">
+                            <label for="">Feedback Type</label>
+                            <select name="feedbackTypeSelect" id="feedbackTypeSelect"></select>
+                        </span>
+                        <span class="filters dropdownSelect">
+                            <label for="">Date</label>
+                            <select name="dateSelect" id="dateSelect"></select>
+                        </span>
+                    </div>
+                    <div class="sideCharts">
+                        <h5>Metrics</h5>
+                        <h6>Gender</h6>
+                        <div id="genderPieChart"></div>
+                    </div>
+                    <div class="sideCharts">
+                        <h6>Vulnerable Groups</h6>
+                        <div id="popGroupChart"></div>
+                    </div>
+                </div>
+                <!-- sidebar -->
+
+                <div class="panel">
+                    <div class="navbarr">
+                        <ul class="nav nav-tabs submenu">
+                            <li class="nav-item navFeedback">
+                                <a class="nav-link active" href="#" value="home">Overall</a>
+                            </li>
+                            <li class="nav-item navFeedback">
+                                <a class="nav-link " href="#" value="rumours">Rumours</a>
+                            </li>
+                            <li class="nav-item navFeedback">
+                                <a class="nav-link" href="#" value="questions">Questions</a>
+                            </li>
+                            <li class="nav-item navFeedback">
+                                <a class="nav-link " href="#" value="suggestions">Suggestions</a>
+                            </li>
+                            <li class="nav-item navFeedback">
+                                <a class="nav-link " href="#" value="metrics">Metrics</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Home -->
+                    <div class="navigation" id="home">
+                        <div class="panel-title">Overrall</div>
+                        <div class="charts piecharts">
+                            <div class="colmd4">
+                                <div class="chart-title">Feedbacks per Emergencies</div>
+                                <div id="emergencyPieChart"></div>
+                            </div>
+                            <div class="colmd4">
+                                <div class="chart-title">Feedbacks per Types</div>
+                                <div id="feedbackPieChart"></div>
+                            </div>
+                            <div class="colmd4">
+                                <div class="chart-title">Feedbacks per Channels</div>
+                                <div id="channelPieChart"></div>
+                            </div>
+                        </div>
+                        <div class="charts othercharts">
+                            <div class="colmd4 barcharts">
+                                <div class="colmd12">
+                                    <div class="chart-title">Topic Bar chart (Top 10)</div>
+                                    <div id="topicBarChart"></div>
+                                </div>
+                                <div class="colmd12">
+                                    <div class="chart-title">Category Bar chart (Top 10)</div>
+                                    <div id="categoryBarChart"></div>
+                                </div>
+                            </div>
+                            <div class="colmd4 mapping">
+                                <span class="chart-title">Feedback per Provinces</span>
+                                <div id="map"></div>
+                                <div class="zoom-controls">
+                                    <button id="zoom_in">+</button>
+                                    <button id="zoom_out">-</button>
+                                </div>
+                                <p class="small">
+                                    The boundaries, names and designations used in this map do not imply official endorsement, nor express a political opinion on the part of the Collective Service, and are without prejudice to claims of sovereignty over the territories mentioned.
+                                </p>
+                                <div class="colmd4">
+                                    <div class="chart-title">Timeline</div>
+                                    <div id="timeline"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Rumours -->
+                    <div class="navigation hidden" id="rumours">
+                        <div class="panel-title">Rumours & Believes</div>
+                    </div>
+                    <!-- Questions -->
+                    <div class="navigation hidden" id="questions">
+                        <div class="panel-title">Questions</div>
+                    </div>
+                    <!-- Suggestions -->
+                    <div class="navigation hidden" id="suggestions">
+                        <div class="panel-title">Suggestions</div>
+                    </div>
+                    <!-- Metrics -->
+                    <div class="navigation hidden" id="metrics">
+                        <div class="panel-title">Metrics</div>
+                    </div>
+                </div>
+                <!-- panel -->
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="mt-1 pt-1 pb-1 footer">
+        <div class="container">
+            <div class="row">
+                <div class="col copyright">
+                    <p class=""><small class="text-white-50">Comunity Response Hub | Mockup © 2022. Produced by the Collective Service.</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="js/feedback.js"></script>
+</body>
+
+</html>
