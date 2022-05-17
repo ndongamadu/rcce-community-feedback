@@ -12,6 +12,7 @@ let factorsArr = [];
 let datatableContext;
 
 const radialDict = [];
+let max = 0;
 
 let outbreaksArr = ["All outbreaks"],
     areasArr = ["All areas"],
@@ -208,7 +209,6 @@ function getRadialData(data = situationData) {
             'id': getFactorId(factor),
             'factor': factor,
             // negatives
-
             'health - Neg': healthArr[0],
             'int - Neg': InterArr[0],
             'out - Neg': OutbreakArr[0],
@@ -229,6 +229,22 @@ function getRadialData(data = situationData) {
     return radialData;
 } //getRadialData
 
+function filterRadialData(data) {
+    var filtered = [];
+    data.forEach(element => {
+        var allValuesAreZero = true;
+
+        for (let index = 0; index < headers.length; index++) {
+            if (element[headers[index]] != 0) {
+                allValuesAreZero = false;
+                break;
+            }
+        }
+        (!allValuesAreZero) ? filtered.push(element): null;
+    });
+    return filtered;
+} // filterRadialData
+
 var g;
 var radialChartScale;
 
@@ -247,8 +263,16 @@ var headers = [
 ];
 
 function generateRadialChart(dataArg) {
-    d3.select('#radial').select('svg').remove();
-    var data = getRadialData(dataArg);
+    d3.select('#radial').select('svg')
+        // .transition().delay(100).duration(500)
+        .remove();
+    var dataToFilter = getRadialData(dataArg);
+
+    var data = filterRadialData(dataToFilter);
+
+    var maxi = d3.max(data, function(d) { return d.total; });
+    maxi > max ? max = maxi : null;
+
     // Variables
     var width = 620;
     var height = 520;
@@ -273,10 +297,12 @@ function generateRadialChart(dataArg) {
     // .range(["#98abc5", "#8a89a6", "#7b6888"]);
 
     x.domain(data.map(function(d) { return d.id; }));
-    y.domain([0, d3.max(data, function(d) { return d.total; })]);
+    // y.domain([0, d3.max(data, function(d) { return d.total; })]);
+    y.domain([0, max]);
     // radialChartScale.domain(['health', 'interventions', 'outbreak']);
 
     var radialtip = d3.select('#radial').append('div').attr('class', 'd3-tip map-tip hidden');
+
     g.append("g")
         .selectAll("g")
         .data(d3.stack().keys(headers)(data))
@@ -288,39 +314,57 @@ function generateRadialChart(dataArg) {
         .data(function(d) { return d; })
         .enter().append("path")
         .attr("class", "bar")
+        .transition()
+        .ease(d3.easeLinear)
         .attr("d", d3.arc()
+
             .innerRadius(function(d) { return y(d[0]); })
             .outerRadius(function(d) { return y(d[1]); })
             .startAngle(function(d) { return x(d.data.id); })
             .endAngle(function(d) { return x(d.data.id) + x.bandwidth(); })
+
             .padAngle(0.01)
             .padRadius(innerRadius))
-        .on("mousemove", function(d) {
+        .delay((d, i) => {
+            return i * 50;
+        });
+
+    g.selectAll("path").on("mousemove", function(d) {
             var x = d3.event.pageX,
                 y = d3.event.pageY;
             showRadialTooltip(d, radialtip, x, y);
         })
         .on("mouseout", function() {
             radialtip.classed('hidden', true);
-        })
-        .on("click", function(d) {
-            return console.log(d)
         });
+    // .on("click", function(d) {
+    //     return console.log(d)
+    // });
 
     var label = g.append("g")
         .selectAll("g")
         .data(data)
         .enter().append("g")
+        .attr('id', 'labels')
         .attr("text-anchor", "middle")
         .attr("transform", function(d) { return "rotate(" + ((x(d.id) + x.bandwidth() / 2) * 180 / Math.PI - 90) + ")translate(" + innerRadius + ",0)"; });
 
+
     label.append("line")
+        .transition()
         .attr("x2", -5)
-        .attr("stroke", "#000");
+        .attr("stroke", "#000")
+        .delay((d, i) => {
+            return i * 50;
+        });
 
     label.append("text")
         .attr("transform", function(d) { return (x(d.id) + x.bandwidth() / 2 + Math.PI / 2) % (2 * Math.PI) < Math.PI ? "rotate(90)translate(0,16)" : "rotate(-90)translate(0,-9)"; })
-        .text(function(d) { return d.id; });
+        .transition()
+        .text(function(d) { return d.id; })
+        .delay((d, i) => {
+            return i * 50;
+        });
 
 } //generateRadialChart
 
@@ -386,7 +430,7 @@ function createTableLegends() {
     });
     factorLegend += '</ul>';
 
-    var tab = '<table class="table table-light table-hover table-sm table-borderless">';
+    var tab = '<table class="table table-light table-hover table-sm table-borderless" id="tableLegend">';
     // '<thead class="table-light">' +
     // '<tr>' +
     // '<th></th>' +
@@ -407,7 +451,6 @@ function createTableLegends() {
         //td
         for (let k = 0; k < colArr.length; k++) {
             const color = colArr[k];
-            // tabRow += '<td>' + vocabs[k] + '<br>' + color + '</td>';
             tabRow += '<td bgcolor="' + color + '">' + vocabs[k] + '</td>';
         }
         tabRow += '</tr>';
@@ -582,23 +625,16 @@ function getFilteredData() {
 } //getFilteredData
 
 $('#outbreakSelect').on('change', function(d) {
-    console.log("filtering from outbreak...");
-
     var filter = getFilteredData();
-    console.log(filter);
     generateRadialChart(filter);
 });
 $('#areaSelect').on('change', function(d) {
-    console.log("filtering from area...");
 
     var filter = getFilteredData();
     console.log(filter);
     generateRadialChart(filter);
 });
 $('#groupsSelect').on('change', function(d) {
-    console.log("filtering pop...");
-
     var filter = getFilteredData();
-    console.log(filter);
     generateRadialChart(filter);
 });

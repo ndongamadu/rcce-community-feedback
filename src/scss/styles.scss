@@ -616,6 +616,12 @@ table.dataTable tbody tr {
                     height: 100px;
                 }
             }
+            #tableLegend {
+                tbody th {
+                    width: 20px;
+                    text-align: center;
+                }
+            }
         }
     }
     .alert {
