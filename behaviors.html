@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <!-- CSS only -->
+    <link rel="icon" href="https://www.rcce-collective.net/wp-content/uploads/2021/04/android-chrome-192x192-1.png" sizes="192x192" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.css" />
+    <link href="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous"
+        referrerpolicy="no-referrer" />
+
+    <!-- scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/39e5643f1a.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.js"></script>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="css/styles.css" rel="stylesheet" />
+    <title>Community Response Hub</title>
+
+</head>
+
+<body>
+    <!-- Header & Navigation Menu -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigationPages">
+					<span class="navbar-toggler-icon"></span>
+					</button>
+                    <a class="navbar-brand" href="#" value="landing">
+                        <img src="assets/icons8-mind-map-90.png" alt="Communty Response Hub" height="30" /><strong>Community</strong> Response Hub</a>
+                    <div class="collapse navbar-collapse" id="navigationPages">
+
+                        <ul class="navbar-nav ml-md-auto">
+                            <li class="nav-item navSite">
+                                <a class="nav-link " href="index.html" value="landing">Home</a>
+                            </li>
+                            <li class="nav-item navSite">
+                                <a class="nav-link context" href="situation.html" value="context">Situation</a>
+                            </li>
+                            <li class="nav-item navSite">
+                                <a class="nav-link coordination" href="coordination.html" value="behaviors">Coordination</a>
+                            </li>
+                            <li class="nav-item navSite">
+                                <a class="nav-link activities" href="activities.html" value="activities">Activities</a>
+                            </li>
+                            <li class="nav-item navSite">
+                                <a class="nav-link behaviors" href="behaviors.html" value="behaviors">Behaviors</a>
+                            </li>
+                            <li class="nav-item navSite">
+                                <a class="nav-link feedback" href="feedback.html">Feedbacks</a>
+                            </li>
+                            <li class="nav-item navSite">
+                                <a class="nav-link reports" href="reports.html" value="reports">Reports</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Navigation to Landing page -->
+        <div class="row navPage" id="behaviors">
+            <div class="loader">
+                <div class="sp sp-circle"></div>
+                Loading data...
+            </div>
+            <div class="col-md-12 behaviors" id="main">
+                <div class="sidebar">
+                    <div class="page-title">
+                        <h4>Social Behaviors data</h4>
+                    </div>
+                    <p class="page-desc">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolores aut accusantium quibusdam, nisi vitae quod voluptatem. Harum illo, doloribus maxime asperiores, hic tempore corrupti labore cupiditate natus voluptatum in tenetur!</p>
+                    <div class="keyfigures">
+                        <span class="key-figure statBehaviors">
+                            <h5 id="num">2345</h5>
+                            <h6 id="label"># data points</h6>
+                        </span>
+                        <span class="key-figure statBehaviorsDate">
+                            <h5 id="num">27/05/2022</h5>
+                            <h6 id="label"># last updated date</h6>
+                        </span>
+                    </div>
+                    <div class="definitions">
+                        <h4>Definitions</h4>
+                        <ul>
+                            <li>
+                                <h5>Dimension</h5>
+                                <p class="page-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor provident animi voluptatibus, velit vitae quisquam culpa</p>
+                            </li>
+                            <li>
+                                <h5>Indicator</h5>
+                                <p class="page-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor provident animi voluptatibus, velit vitae quisquam culpa</p>
+                            </li>
+                            <li>
+                                <h5>Subvariable</h5>
+                                <p class="page-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolor provident animi voluptatibus, velit vitae quisquam culpa</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Methodology</h4>
+                        <p class="page-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt vitae facere dicta atque aperiam nulla obcaecati quas, fugiat qui sapiente suscipit sunt consequuntur blanditiis voluptate non asperiores molestias fugit necessitatibus.</p>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="navbarr">
+                        <ul class="nav nav-tabs submenu">
+                            <li class="nav-item navBehaviors">
+                                <a class="nav-link active" href="#" value="home">Overall</a>
+                            </li>
+                            <li class="nav-item navBehaviors">
+                                <a class="nav-link " href="#" value="analysis">Analysis</a>
+                            </li>
+                            <li class="nav-item navBehaviors">
+                                <a class="nav-link" href="#" value="metadata">Metadata</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Overall -->
+                    <div class="navigation" id="home">
+                        <div class="panel-title">Overview</div>
+                        <div class="behaviorsFilters">
+                            <span class="indicatorSelect">
+                                <select name="indicators" id="indicators"></select>
+                            </span>
+                            <span class="dimensionSelect">
+                                <select name="dimension" id="dimensions"></select>
+                            </span>
+                            <!-- <span class="datepickers">
+                                <div class="input-group input-daterange">
+                                    <input type="text" class="form-control" value="2012-04-05">
+                                    <div class="input-group-addon">to</div>
+                                    <input type="text" class="form-control" value="2012-04-19">
+                                </div>
+                            </span> -->
+                        </div>
+                        <div class="datatableBehaviors">
+                            <table id="datatableBehaviors" class="row-border" style="width:100%">
+                                <thead></thead>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Analysis -->
+                    <div class="navigation hidden" id="analysis">
+                        <div class="panel-title">Analysis</div>
+                    </div>
+
+                    <!-- Metadata -->
+                    <div class="navigation hidden" id="metadata">
+                        <div class="panel-title">Metadata</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="mt-1 pt-1 pb-1 footer">
+        <div class="container">
+            <div class="row">
+                <div class="col copyright">
+                    <p class=""><small class="text-white-50">Comunity Response Hub | Mockup © 2022. Produced by the Collective Service.</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="js/behaviors.js"></script>
+</body>
+
+</html>

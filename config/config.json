@@ -9,10 +9,44 @@
         "Code_short": "",
         "Gender": "SEXE",
         "Population": "TRANCHE D'AGE",
-        "Channel": "CANAL DE COMMUNICATION"
+        "Channel": "CANAL DE COMMUNICATION",
+        "Date": "DATE"
     },
     "Map": {
         "Admin2": "ZONE DE SANTE",
         "Admin2_code": "AdmCode"
+    },
+    "Reports": {
+        "Tags": ["Tag1", "Tag2", "Tag3", "Tag4"],
+        "TagColumn": "Keywords"
+    },
+    "Behaviors": {
+        "Date": "indicator_date",
+        "Indicator": "indicator_name",
+        "Dimension": "dimension",
+        "TableHeaders": ["subvariable", "dimension", "indicator_name", "indicator_matching", "indicator_date", "indicator_value"],
+        "TableHeadersCleaned": ["Subvariable", "Dimension", "Indicator", "Match", "Date", "Value"]
+    },
+    "Context": {
+        "Framework": {
+            "Id": "Lead Id",
+            "Dimension": "Context - Dimension",
+            "Type_outbreak": "Outbreak - Dimension",
+            "Type_outbreak_subdim": "Outbreak - Subdimension",
+            "Subdimension": "Context - Subdimension",
+            "Impact": ["Health and social consequences", "Interventions to control the outbreak", "Spread of the outbreak"],
+            "Health": "Health and social consequences",
+            "Interventions": "Interventions to control the outbreak",
+            "Outbreak": "Spread of the outbreak",
+            "ImpactDictionay": {
+                "Health": ["Decrease", "Neutral", "Increase"],
+                "Interventions": ["Hinder", "Neutral", "Enable"],
+                "Outbreak": ["Discourage", "Neutral", "Facilitate"]
+            },
+            "TableHeadersCleaned": ["Contextual element", "Factor", "Health & social consequences", "Interventions to control the outbreak", "Spread of the outbreak"],
+            "TableHeaders": ["Lead Id", "Modified Excerpt", "Context - Subdimension", "Health and social consequences", "Interventions to control the outbreak", "Spread of the outbreak"],
+            "Admin2": "District",
+            "Population": "Population"
+        }
     }
 }
