@@ -1,19 +1,31 @@
 {
-    "Framework": {
-        "Emergency": "CADRE DE CODAGE",
-        "Type": "TYPE DE RETOUR D'INFORMATION",
-        "Type_short": "",
-        "Category": "CATEGORY",
-        "Category_short": "",
-        "Code": "CODE",
-        "Code_short": "",
-        "Gender": "SEXE",
-        "Population": "TRANCHE D'AGE",
-        "Channel": "CANAL DE COMMUNICATION",
-        "Date": "DATE"
+    "Feedback": {
+        "Framework": {
+            "Org": "Source/Organisation CREC",
+            "Emergency": "Maladie.ENG",
+            "Type": "Type.ENG",
+            "Types": {
+                "rumours": "Rumors beliefs observations",
+                "suggestions": "Suggestion request",
+                "questions": "Question"
+            },
+            "Type_short": "",
+            "Category": "Categorie.ENG",
+            "Category_short": "",
+            "Code": "Mot Cl�.ENG",
+            "Topic": "Theme",
+            "Code_short": "",
+            "Gender": "SEXE",
+            "Population": "TRANCHE D'AGE",
+            "Channel": "CANAL DE COMMUNICATION",
+            "Date": "Date AAAA-MM-JJ",
+            "Aggregation": "Nbre",
+            "Adm1": "Aire de Sante",
+            "Adm2": "Zone de Sante"
+        }
     },
     "Map": {
-        "Admin2": "ZONE DE SANTE",
+        "Admin2": "Zone de Sante",
         "Admin2_code": "AdmCode"
     },
     "Reports": {

@@ -222,7 +222,7 @@ h6 {
   padding: 0 15px 0 15px; }
 
 .feedback .panel {
-  flex: 3; }
+  flex: 4; }
 
 .sidebar .keyfigures {
   display: flex;
@@ -266,6 +266,13 @@ h6 {
   line-height: 1.5;
   height: 30px;
   width: 60%; }
+
+.sidebar .selections .dropdownDate #dateYearSelect {
+  width: 20%;
+  margin-right: 10px; }
+
+.sidebar .selections .dropdownDate #dateMonthSelect {
+  width: 40%; }
 
 @media only screen and (max-width: 767px) {
   .feedback {
@@ -316,17 +323,7 @@ g.tick {
 
 .chart-title {
   font-family: "Open Source", sans-serif;
-  font-size: 0.73em;
-  font-weight: 300;
-  color: #5b5b5b;
-  margin: 10px 5px 10px 5px;
-  text-align: center; }
-
-.piecharts {
-  display: flex; }
-
-.piecharts .colmd4 {
-  flex: 1; }
+  font-size: 0.73em; }
 
 .othercharts {
   display: flex; }
@@ -337,7 +334,7 @@ g.tick {
 
 .mapping #map {
   width: 100%;
-  height: 500px;
+  height: 400px;
   position: relative; }
 
 .mapping .zoom-controls {
