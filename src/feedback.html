@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.css" />
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <link href="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.css" rel="stylesheet">
 
     <!-- scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -20,11 +21,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.js"></script>
     <script src="https://d3js.org/d3.v5.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
-    <script src="https://d3-legend.susielu.com/d3-legend.min.js"></script>
-    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <!-- <script src="https://d3-legend.susielu.com/d3-legend.min.js"></script> -->
+    <!-- <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
-    <script src="https://momentjs.com/downloads/moment.min.js"></script>
+    <!-- <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
+    <script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script>
     <link href="css/styles.css" rel="stylesheet" />
     <title>Community Response Hub</title>
 
@@ -94,10 +96,11 @@
                         </span>
                         <span class="key-figure statOrg">
                             <h5 id="num"></h5>
-                            <h6 id="label"># orgs</h6>
+                            <h6 id="label"># org</h6>
                         </span>
                     </div>
-                    <h6>Filters <span><button class="btn btn-tertiary" id="fResetAll">Reset all</button></span></h6>
+                    <h3>Filter <span><button class="btn btn-tertiary" id="fResetAll">Reset all</button></span></h3>
+
                     <div class="selections">
                         <span class="filters dropdownSelect">
                             <label for="">Emergency</label>
@@ -107,12 +110,21 @@
                             <label for="">Feedback Type</label>
                             <select name="feedbackTypeSelect" id="feedbackTypeSelect"></select>
                         </span>
-                        <span class="filters dropdownSelect">
+                        <span class="filters">
                             <label for="">Date</label>
-                            <select name="dateSelect" id="dateSelect"></select>
+                            <span class="d-flex dropdownDate">
+                                <select class="select" name="dateSelect" id="dateYearSelect" multiple></select>
+                                <select class="select" name="dateSelect" id="dateMonthSelect" multiple></select>
+                            </span>
+
                         </span>
+                        <!-- <span class="filters dropdownSelect">
+                            <label for="">Demographic groups</label>
+                            <select name="demographicSelect" id="demographicSelect"></select>
+                        </span> -->
                     </div>
-                    <div class="sideCharts">
+
+                    <!-- <div class="sideCharts">
                         <h5>Metrics</h5>
                         <h6>Gender</h6>
                         <div id="genderPieChart"></div>
@@ -120,7 +132,7 @@
                     <div class="sideCharts">
                         <h6>Vulnerable Groups</h6>
                         <div id="popGroupChart"></div>
-                    </div>
+                    </div> -->
                 </div>
                 <!-- sidebar -->
 
@@ -146,64 +158,130 @@
                     </div>
                     <!-- Home -->
                     <div class="navigation" id="home">
-                        <div class="panel-title">Overrall</div>
-                        <div class="charts piecharts">
-                            <div class="colmd4">
-                                <div class="chart-title">Feedbacks per Emergencies</div>
-                                <div id="emergencyPieChart"></div>
-                            </div>
-                            <div class="colmd4">
-                                <div class="chart-title">Feedbacks per Types</div>
-                                <div id="feedbackPieChart"></div>
-                            </div>
-                            <div class="colmd4">
-                                <div class="chart-title">Feedbacks per Channels</div>
-                                <div id="channelPieChart"></div>
-                            </div>
-                        </div>
-                        <div class="charts othercharts">
-                            <div class="colmd4 barcharts">
-                                <div class="colmd12">
-                                    <div class="chart-title">Topic Bar chart (Top 10)</div>
-                                    <div id="topicBarChart"></div>
+                        <div class="panel-title">Overall</div>
+                        <!-- new template -->
+                        <div class="row charts">
+                            <div class="col-md-6 pieTimeline">
+                                <div class="col-md-12 pieCharts">
+                                    <div class="row">
+                                        <div class="col-md-6 pieChart topic">
+                                            <h5 class="chart-title">Outbreak</h5>
+                                            <div id="topicPie"></div>
+                                        </div>
+                                        <div class="col-md-6 pieChart feedbackType">
+                                            <h5 class="chart-title">Type of feedback</h5>
+                                            <div id="feedbackType"></div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="colmd12">
-                                    <div class="chart-title">Category Bar chart (Top 10)</div>
-                                    <div id="categoryBarChart"></div>
-                                </div>
-                            </div>
-                            <div class="colmd4 mapping">
-                                <span class="chart-title">Feedback per Provinces</span>
-                                <div id="map"></div>
-                                <div class="zoom-controls">
-                                    <button id="zoom_in">+</button>
-                                    <button id="zoom_out">-</button>
-                                </div>
-                                <p class="small">
-                                    The boundaries, names and designations used in this map do not imply official endorsement, nor express a political opinion on the part of the Collective Service, and are without prejudice to claims of sovereignty over the territories mentioned.
-                                </p>
-                                <div class="colmd4">
-                                    <div class="chart-title">Timeline</div>
+                                <div class="timeline">
+                                    <h5 class="chart-title">Timeline</h5>
                                     <div id="timeline"></div>
                                 </div>
                             </div>
+                            <div class="col-md-6 mapping">
+                                <h5 class="chart-title">Geographic Area(#feedback/area)</h5>
+                                <div id="map"></div>
+                            </div>
+                        </div>
+                        <div class="datatable">
+                            <h5 class="chart-title">Top 5</h5>
+                            <table id="datatable" class="cell-border" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Outbreak</th>
+                                        <th>Topic</th>
+                                        <th># Feedback</th>
+                                        <th>Total (%)</th>
+                                        <th>Last X months</th>
+                                    </tr>
+                                </thead>
+                            </table>
                         </div>
                     </div>
-                    <!-- Rumours -->
-                    <div class="navigation hidden" id="rumours">
+
+                    <!-- Rumours Suggestions Questions tabs -->
+                    <div class="navigation hidden" id="tabsContent">
                         <div class="panel-title">Rumours & Believes</div>
+                        <div class="tabsDataTable">
+                            <table id="tabsDataTable" class="cell-border" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Outbreak</th>
+                                        <th>Code</th>
+                                        <th>Topic</th>
+                                        <th># Feedback</th>
+                                        <th>Total (%)</th>
+                                        <th>Last X months</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
                     </div>
-                    <!-- Questions -->
-                    <div class="navigation hidden" id="questions">
-                        <div class="panel-title">Questions</div>
-                    </div>
-                    <!-- Suggestions -->
-                    <div class="navigation hidden" id="suggestions">
-                        <div class="panel-title">Suggestions</div>
-                    </div>
+
                     <!-- Metrics -->
                     <div class="navigation hidden" id="metrics">
                         <div class="panel-title">Metrics</div>
+                        <div class="metricsCharts">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h5 class="chart-title">Demographic Groups</h5>
+                                                <div id="demographicPie"></div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h5 class="chart-title">Gender Groups</h5>
+                                                <div id="genderPie"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h5 class="chart-title">Vulnerables Groups</h5>
+                                                <div id="vulnerablesPie"></div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h5 class="chart-title">Channels</h5>
+                                                <div id="channelsPie"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <h5 class="chart-title">Geographic Area</h5>
+                                        <!-- <div id="topicPie"></div> -->
+                                        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Iure omnis at quidem esse? Corrupti, ex quasi natus ea amet dolore tempora animi esse veritatis. Doloribus ipsa enim vitae voluptas asperiores!</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <h5 class="chart-title">Regions</h5>
+                                <table id="metricsTable" class="cell-border" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Region</th>
+                                            <th>Total</th>
+                                            <th>Rumours</th>
+                                            <th>Questions</th>
+                                            <th>Requests</th>
+                                            <th>Others</th>
+                                            <th>Gender</th>
+                                            <th>Vulnerables groups</th>
+                                            <th>total (%)</th>
+                                            <th>Last X months</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- panel -->
@@ -224,5 +302,9 @@
 
     <script type="text/javascript" src="js/feedback.js"></script>
 </body>
+
+</html>
+
+</html>
 
 </html>
