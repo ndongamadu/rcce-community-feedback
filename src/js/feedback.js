@@ -1,5 +1,5 @@
 let geodataUrl = 'data/equateur.json';
-let dataURL = 'data/hub_feedback_drc_test_data.csv';
+let dataURL = 'data/drc_all_cf_data.csv';
 let configFile = 'config/config.json';
 
 let geomData;
@@ -21,7 +21,7 @@ $(document).ready(function() {
 
             communityFeedbackData.forEach(element => {
                 element[config.Feedback.Framework.Aggregation] = +element[config.Feedback.Framework.Aggregation];
-                var mm = moment(element[config.Feedback.Framework.Date], ['MM/DD/YYYY']);
+                var mm = moment(element[config.Feedback.Framework.Date], [config.Feedback.Framework.DateFormat]);
 
                 var date = new Date(mm.year(), mm.month(), mm.date());
                 var dateF = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
@@ -61,12 +61,13 @@ function initViz() {
     generateDropdowns();
     generateDateDropdown();
 
-    outbreakPie = generatePieChart('topicPie', getPieChartData('Emergency'));
+    const outbreakColors = ['#D20E1E', '#118DFF', '#12239E'];
+    outbreakPie = generatePieChart('topicPie', getPieChartData('Emergency'), outbreakColors);
     feedbackTypePie = generatePieChart('feedbackType', getPieChartData('Type'));
 
     //timeline
-    timelineChart = generateTimeline(getTimelineData());
-
+    var tlData = getTimelineData();
+    timeLineChart = generateTimeline(tlData);
     //table
     generateDatatable();
 
@@ -89,7 +90,7 @@ function trimArray(arr) {
 
 function generateKeyFigures() {
     var numFeedback = d3.sum(globalFilteredCFData, (d) => { return d[config.Feedback.Framework.Aggregation]; }),
-        numOrgs = getColumnUniqueValues(config.Feedback.Framework.Org).length + 1;
+        numOrgs = getColumnUniqueValues("Org").length + 1;
     // feedbacks
     $('.statFeedback h5').html('');
     $('.statFeedback h5').html(numFeedback);
@@ -108,11 +109,13 @@ function getColumnUniqueValues(col, data = globalFilteredCFData) {
 } //getColumnUniqueValues
 
 function generateDropdowns() {
-    var colsArr = ['Emergency', 'Type', 'Date'];
+    var colsArr = ['Emergency', 'Type', 'Date', 'Gender', 'Population'];
     for (let index = 0; index < colsArr.length; index++) {
         const col = colsArr[index];
         var id = (col == 'Emergency') ? 'emergencySelect' :
-            (col == 'Type') ? 'feedbackTypeSelect' : 'dateSelect'
+            (col == 'Type') ? 'feedbackTypeSelect' :
+            (col == 'Gender') ? 'vulnerableSelect' :
+            (col == 'Population') ? 'demographicSelect' : 'dateSelect';
 
         var options = "";
         var data = getColumnUniqueValues(col);
@@ -140,7 +143,7 @@ function getDatesArr(data = globalFilteredCFData) {
 
     var yearsArr = [];
     if (minYear < maxYear) {
-        for (minYear; minYear < maxYear; minYear++) {
+        for (minYear; minYear <= maxYear; minYear++) {
             yearsArr.push(minYear);
         }
     } else yearsArr.push(minYear);
@@ -205,6 +208,27 @@ function getPieChartData(colName, dataArg = globalFilteredCFData) {
         colonnes.push(arr);
     });
     return colonnes;
+} //getPieChartData
+
+function getBarChartData(colName, dataArg = globalFilteredCFData) {
+    var data = d3.nest()
+        .key(function(d) {
+            return d[config.Feedback.Framework[colName]];
+        })
+        .rollup(function(v) {
+            return d3.sum(v, function(d) {
+                return d[config.Feedback.Framework.Aggregation];
+            });
+        })
+        .entries(dataArg).sort(sortNestedData);
+
+    var xArr = ['x'],
+        yArr = ['#feedback'];
+    data.forEach(element => {
+        xArr.push(element.key);
+        yArr.push(element.value);
+    });
+    return [xArr, yArr];
 } //getPieChartData
 
 function getTimelineData(dataArg = globalFilteredCFData) {
@@ -295,7 +319,8 @@ function generateTimeline(data) {
             }
         },
         size: {
-            height: 200
+            height: 200,
+            width: 610
         },
         // padding: { right: 20 },
         legend: {
@@ -310,7 +335,7 @@ function generateTimeline(data) {
 const pieChartHeight = 200;
 const pieChartColorRange = [primaryColor, secondaryColor, tertiaryColor];
 
-function generatePieChart(bind, data) {
+function generatePieChart(bind, data, colorRange = pieChartColorRange) {
     var chart = c3.generate({
         bindto: '#' + bind,
         size: {
@@ -322,7 +347,7 @@ function generatePieChart(bind, data) {
             type: 'pie'
         },
         color: {
-            pattern: pieChartColorRange
+            pattern: colorRange
         },
         legend: {
             hide: true
@@ -372,24 +397,41 @@ function getTopNTopics(dataArg) {
 }
 
 function createCodePctChart(id, value, total = totalNumberOfFeedback) {
-    var chart = c3.generate({
+    var colors = ['#D20E1E', '#12239E'];
+    var labelArr = ['#feedback', 'total'];
+    var data = [
+        [labelArr[0], value],
+        [labelArr[1], total - value]
+    ];
+
+    if (typeof(value) == typeof([])) {
+        colors = ['#D20E1E', '#12239E', '#1f77b4', '#aec7e8'];
+        var sommeVals = 0;
+        data = value;
+        for (let index = 0; index < value.length; index++) {
+            const element = value[index];
+            labelArr.push(element[0]);
+            sommeVals += element[1];
+        }
+
+        labelArr.push('total');
+        data.push(['total', total - sommeVals]);
+    }
+    const chart = c3.generate({
         bindto: '#percentage' + id,
         size: {
-            width: 180,
+            width: 140,
             height: 40
         },
         data: {
-            columns: [
-                ["item", value],
-                ["total", total - value]
-            ],
+            columns: data,
             type: 'bar',
             groups: [
-                ['item', 'total']
+                labelArr
             ]
         },
         color: {
-            pattern: ['#1f77b4', '#aec7e8']
+            pattern: colors
         },
         axis: {
             rotated: true,
@@ -671,6 +713,8 @@ function updateDataSourceFromSelects() {
 
     var emergencySelected = $('#emergencySelect').val();
     var feedbackTypeSelected = $('#feedbackTypeSelect').val();
+    var demographicSelected = $('#demographicSelect').val();
+    var vulnerableSelected = $('#vulnerableSelect').val();
 
     if (emergencySelected != "all") {
         data = data.filter(function(d) {
@@ -682,6 +726,18 @@ function updateDataSourceFromSelects() {
             return d[config.Feedback.Framework.Type] == feedbackTypeSelected;
         })
     }
+    if (demographicSelected != "all") {
+        data = data.filter(function(d) {
+            return d[config.Feedback.Framework.Population] == demographicSelected;
+        })
+    }
+    if (vulnerableSelected != "all") {
+        data = data.filter(function(d) {
+            return d[config.Feedback.Framework.Gender] == vulnerableSelected;
+        })
+    }
+    // handle data is void
+
     globalFilteredCFData = data;
 } //getFilteredDataFromSelects
 
@@ -699,11 +755,12 @@ function updateVisuals() {
         columns: getPieChartData('Type'),
         unload: true
     });
+    var tlData = getTimelineData();
     //update timeline
-    // timeLineChart.load({
-    //     columns: getTimelineData(),
-    //     unload: true
-    // });
+    timeLineChart.load({
+        columns: tlData,
+        unload: true
+    });
 
     //update datatable
     updateDataTable();
@@ -720,10 +777,22 @@ $('#feedbackTypeSelect').on("change", function() {
     updateVisuals();
 });
 
+$('#vulnerableSelect').on("change", function() {
+    updateVisuals();
+});
+
+$('#demographicSelect').on("change", function() {
+    updateVisuals();
+});
+
 //reset 
 $('#fResetAll').on("click", function() {
     $('#emergencySelect').val('all');
     $('#feedbackTypeSelect').val('all');
+    $('#vulnerableSelect').val('all');
+    $('#demographicSelect').val('all');
+    // reset dates !
+
     updateVisuals();
 });
 
@@ -802,9 +871,12 @@ function generateTabsDataTable(dataArg = communityFeedbackData) {
                 "targets": "_all"
             },
         ],
-        "pageLength": 15,
         "bLengthChange": false,
-        "pagingType": "simple_numbers",
+        // "paging": false,
+        // "scrollY": 600,
+        "pageLength": 15,
+        // "bLengthChange": false,
+        // "pagingType": "simple_numbers",
         "order": false,
         "dom": "Blrtp"
     });
@@ -856,7 +928,7 @@ function getFormattedTabsTableData(dataArg) {
 
 function generateTabsDTCodesCharts(data, max) {
     //gauge charts
-
+    // console.log(data);
     d3.select('#tabsDataTable')
         .selectAll('.percentage')
         .attr('id', (d, i) => {
@@ -869,25 +941,40 @@ function generateTabsDTCodesCharts(data, max) {
         .attr('id', (d, i) => {
             return "spark-" + i;
         });
-    for (let index = 0; index < data.length; index++) {
+    // restons sur les 15 premieres valeurs, qui sont affcichees sur la table
+    for (let index = 0; index < 15; index++) {
         const id = "-" + data[index][0];
         createCodePctChart(id, data[index][4], max);
         //spark
         var sparkdata = getSparkChartDataForTabs(data[index][1], data[index][2], data[index][3]);
+        // console.log(sparkdata);
         createSparkLine(id, sparkdata);
     }
 
 }
 
 function getSparkChartDataForTabs(emergency, code, topic, dataArg = communityFeedbackData) {
-    var filter = dataArg.filter((d) => {
-        return (
-                d[config.Feedback.Framework.Emergency] == emergency) &&
-            (d[config.Feedback.Framework.Code] == code) &&
-            (d[config.Feedback.Framework.Topic] == topic);
-    });
-    var data = (filter.length == 0) ? [] : getSparklineData(filter);
+    // var filter = dataArg.filter((d) => {
+    //     return (d[config.Feedback.Framework.Emergency] == emergency &&
+    //         d[config.Feedback.Framework.Code] == code &&
+    //         d[config.Feedback.Framework.Topic] == topic);
+    // });
+    // var filter2 = dataArg.filter((d) => {
+    //     return (d[config.Feedback.Framework.Emergency] == emergency &&
+    //         d[config.Feedback.Framework.Code] == code);
+    // });
+    var filter = dataArg
+        .filter((d) => {
+            return d[config.Feedback.Framework.Emergency] == emergency;
+        })
+        .filter((v) => { return v[config.Feedback.Framework.Code] == code });
 
+    if (topic != "") {
+        filter = filter.filter((v) => { return v[config.Feedback.Framework.Topic] == topic; });
+    }
+
+    var data = (filter.length == 0) ? [] : getSparklineData(filter);
+    // console.log(filter);
     return data;
 } //getSparkChartData
 
@@ -900,9 +987,9 @@ let demographicPie,
 let metricsDataTable;
 
 function generateMetrics() {
-    demographicPie = generatePieChart('demographicPie', getPieChartData('Emergency'));
-    genderPie = generatePieChart('genderPie', getPieChartData('Emergency'));
-    vulnerablesPie = generatePieChart('vulnerablesPie', getPieChartData('Emergency'));
+    demographicPie = generatePieChart('demographicPie', getPieChartData('Population'));
+    genderPie = generatePieChart('genderPie', getPieChartData('Gender'));
+    vulnerablesPie = generatePieChart('vulnerablesPie', getPieChartData('Population'));
     channelsPie = generatePieChart('channelsPie', getPieChartData('Emergency'));
 
     generateMetricsDataTable();
@@ -911,7 +998,6 @@ function generateMetrics() {
 
 function generateMetricsDataTable(dataArg = communityFeedbackData) {
     var dtData = getMetricsTableData(dataArg);
-    console.log(dtData);
     metricsDataTable = $('#metricsTable').DataTable({
         data: dtData,
         "columns": [
@@ -930,7 +1016,17 @@ function generateMetricsDataTable(dataArg = communityFeedbackData) {
             { "width": "9%" },
             { "width": "9%" }
         ],
-        "columnDefs": [{
+        "columnDefs": [
+            //
+            {
+                "className": "gender",
+                "targets": [7]
+            },
+            {
+                "className": "vul",
+                "targets": [8]
+            },
+            {
                 "className": "pct",
                 "targets": [9]
             },
@@ -947,7 +1043,7 @@ function generateMetricsDataTable(dataArg = communityFeedbackData) {
         "order": false,
         "dom": "Blrt"
     });
-
+    generateMetricsTableCharts(dtData);
 } //generateMetricsDataTable
 
 function getMetricsTableData(dataArg) {
@@ -993,3 +1089,98 @@ function getMetricsTableData(dataArg) {
     });
     return data;
 } //getMetricsTableData
+
+function generateMetricsTableCharts(data, dataArg = communityFeedbackData) {
+    console.log(data);
+
+    //gender charts
+    d3.select('#metricsTable')
+        .selectAll('.gender')
+        .attr('id', (d, i) => {
+            return "percentage-" + i;
+        });
+
+    //vulnerable groups charts
+    d3.select('#metricsTable')
+        .selectAll('.vul')
+        .attr('id', (d, i) => {
+            return "vul-" + i;
+        });
+
+
+    //gauge charts
+    d3.select('#metricsTable')
+        .selectAll('.pct')
+        .attr('id', (d, i) => {
+            return "percentage-2-" + i;
+        });
+
+    // area charts
+    d3.select('#metricsTable')
+        .selectAll('.spk')
+        .attr('id', (d, i) => {
+            return "spark-" + i;
+        });
+
+    for (let index = 0; index < data.length; index++) {
+        const element = data[index];
+        const id = "-" + data[index][0];
+        // Gender chart
+        const filter = dataArg.filter((d) => { return d[config.Feedback.Framework.Adm1] == element[1]; });
+        const genderdata = getPieChartData("Gender", filter);
+        createCodePctChart(id, genderdata);
+
+        // vulnerable chart
+        const vuldata = getBarChartData("Population", filter);
+        generateBarChart(id, vuldata);
+
+        //gauge total
+        const pctid = "-2" + id;
+        createCodePctChart(pctid, element[2]);
+
+        //spark
+        var sparkdata = getSparklineData(filter);
+        createSparkLine(id, sparkdata);
+    }
+}
+
+function generateBarChart(id, data) {
+    var chart = c3.generate({
+        bindto: '#vul' + id,
+        size: {
+            height: 65,
+            width: 100
+        },
+        data: {
+            x: 'x',
+            columns: data,
+            type: 'bar'
+        },
+        bar: {
+            width: {
+                ratio: 0.2
+            }
+        },
+        // color: {
+        //     pattern: [primaryColor]
+        // },
+        axis: {
+            x: {
+                type: 'category',
+                // show: false
+                tick: {
+                    centered: true,
+                    outer: false,
+                    fit: true
+                }
+            },
+            y: {
+                show: false
+            }
+        },
+        legend: {
+            show: false
+        }
+    });
+    return chart;
+} //generateBarChart

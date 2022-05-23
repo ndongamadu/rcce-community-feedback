@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "start": "http-server ./dist -c-1 -p 3000",
-        "scss": "node-sass -o dist/css src/scss/styles.scss",
+        "scss": "node-sass -o dist/css src/scss/",
         "watch:data": "onchange 'src/data/*' -- npm run build:data",
         "watch:config": "onchange 'src/config/*' -- npm run build:config",
         "watch:html": "onchange 'src/*.html' -- npm run build:html",

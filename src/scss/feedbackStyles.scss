@@ -1,0 +1,119 @@
+@import "base";
+// feedback page
+.feedback {
+    display: flex;
+}
+
+.feedback .sidebar {
+    flex: 1;
+    padding: 0 15px 0 15px;
+}
+
+.feedback .panel {
+    flex: 4;
+}
+
+.sidebar .keyfigures {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    span {
+        flex: 1;
+    }
+    #label {
+        font-family: "Source Sans Pro", sans-serif;
+        font-weight: normal;
+        font-size: 0.8rem;
+        line-height: 1;
+        color: #000;
+        text-transform: uppercase;
+    }
+    #num {
+        font-family: "Source Sans Pro", sans-serif;
+        font-weight: bold;
+        font-size: 1.5rem;
+        line-height: 1;
+        min-height: 40px;
+        color: #204669;
+        margin: 0;
+    }
+}
+
+#fResetAll {
+    // float: right;
+    margin: 10px auto;
+    border-radius: 8px;
+    // background: #ccc;
+    // font-size: 0.75em;
+}
+
+.sidebar .selections {
+    .filters {
+        display: flex;
+        flex-direction: column;
+        padding-top: 5px;
+        padding-bottom: 15px;
+    }
+    select {
+        background-color: #fff;
+        border: 1px solid rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        // box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+        font-family: "Source Sans Pro", sans-serif;
+        font-size: 0.75rem;
+        line-height: 1.5;
+        height: 30px;
+        width: 60%;
+        margin-right: 5px;
+        // padding: 0 10px 10px 10px;
+    }
+    .dropdownDate #dateYearSelect {
+        width: 20%;
+        // padding-right: 10px;
+        margin-right: 10px;
+    }
+    .dropdownDate #dateMonthSelect {
+        width: 40%;
+    }
+}
+
+.page-desc {
+    margin-top: 10px;
+    padding: 5px;
+    font-size: 14px;
+    color: #5b5b5b;
+}
+
+.d3-tip {
+    padding: 5px;
+    background-color: white;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.map-tip {
+    position: absolute;
+}
+
+table.dataTable thead th,
+table.dataTable thead td {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    padding: 5px 10px;
+    border-bottom: 1px solid #ccc;
+    text-transform: uppercase;
+}
+
+table.dataTable tbody tr {
+    padding-top: 5px;
+    font-size: 0.82rem;
+}
+
+@media only screen and (max-width: 767px) {
+    .feedback {
+        // display: flex;
+        flex-direction: column;
+    }
+}
