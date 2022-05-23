@@ -21,13 +21,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.11/c3.min.js"></script>
     <script src="https://d3js.org/d3.v5.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
-    <!-- <script src="https://d3-legend.susielu.com/d3-legend.min.js"></script> -->
-    <!-- <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/jquery.dataTables.min.js"></script>
-    <!-- <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
     <script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script>
-    <link href="css/styles.css" rel="stylesheet" />
+    <link href="css/feedbackStyles.css" rel="stylesheet" />
     <title>Community Response Hub</title>
 
 </head>
@@ -83,9 +80,9 @@
             <div class="col-md-12 feedback" id="main">
 
                 <div class="sidebar">
-                    <div class="page-title">
+                    <!-- <div class="page-title">
                         <h4>Feedback</h4>
-                    </div>
+                    </div> -->
                     <p class="page-desc">
                         Feedbacks are collected and compiled through a feedback framework available here. To learn more about it, contact us.
                     </p>
@@ -99,7 +96,8 @@
                             <h6 id="label"># org</h6>
                         </span>
                     </div>
-                    <h3>Filter <span><button class="btn btn-tertiary" id="fResetAll">Reset all</button></span></h3>
+
+                    <h3>Filter</h3>
 
                     <div class="selections">
                         <span class="filters dropdownSelect">
@@ -118,21 +116,17 @@
                             </span>
 
                         </span>
-                        <!-- <span class="filters dropdownSelect">
+                        <span class="filters dropdownSelect">
+                            <label for="">Vulnerable groups</label>
+                            <select name="vulnerableSelect" id="vulnerableSelect"></select>
+                        </span>
+                        <span class="filters dropdownSelect">
                             <label for="">Demographic groups</label>
                             <select name="demographicSelect" id="demographicSelect"></select>
-                        </span> -->
+                        </span>
                     </div>
+                    <span><button type="button" class="btn btn-danger" id="fResetAll">Reset all</button></span>
 
-                    <!-- <div class="sideCharts">
-                        <h5>Metrics</h5>
-                        <h6>Gender</h6>
-                        <div id="genderPieChart"></div>
-                    </div>
-                    <div class="sideCharts">
-                        <h6>Vulnerable Groups</h6>
-                        <div id="popGroupChart"></div>
-                    </div> -->
                 </div>
                 <!-- sidebar -->
 
@@ -262,7 +256,7 @@
                             </div>
 
                             <div class="row">
-                                <h5 class="chart-title">Regions</h5>
+                                <!-- <h5 class="chart-title">Regions</h5> -->
                                 <table id="metricsTable" class="cell-border" style="width:100%">
                                     <thead>
                                         <tr>

@@ -2,26 +2,27 @@
     "Feedback": {
         "Framework": {
             "Org": "Source/Organisation CREC",
-            "Emergency": "Maladie.ENG",
-            "Type": "Type.ENG",
+            "Emergency": "Disease",
+            "Type": "Type",
             "Types": {
                 "rumours": "Rumors beliefs observations",
                 "suggestions": "Suggestion request",
                 "questions": "Question"
             },
             "Type_short": "",
-            "Category": "Categorie.ENG",
+            "Category": "Category",
             "Category_short": "",
-            "Code": "Mot Cl�.ENG",
+            "Code": "Mot_cle",
             "Topic": "Theme",
             "Code_short": "",
-            "Gender": "SEXE",
-            "Population": "TRANCHE D'AGE",
+            "Gender": "Groupes Specific",
+            "Population": "Tranches age",
             "Channel": "CANAL DE COMMUNICATION",
             "Date": "Date AAAA-MM-JJ",
+            "DateFormat": "YYYY-MM-DD",
             "Aggregation": "Nbre",
-            "Adm1": "Aire de Sante",
-            "Adm2": "Zone de Sante"
+            "Adm1": "Zone_sante",
+            "Adm2": "Aire_sante"
         }
     },
     "Map": {
