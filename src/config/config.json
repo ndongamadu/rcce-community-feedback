@@ -47,19 +47,20 @@
             "Type_outbreak": "Outbreak - Dimension",
             "Type_outbreak_subdim": "Outbreak - Subdimension",
             "Subdimension": "Context - Subdimension",
-            "Impact": ["Health and social consequences", "Interventions to control the outbreak", "Spread of the outbreak"],
+            "Impact": ["Health and social consequences", "Interventions to control the outbreak/emergency", "Spread of the outbreak/emergency"],
             "Health": "Health and social consequences",
-            "Interventions": "Interventions to control the outbreak",
-            "Outbreak": "Spread of the outbreak",
+            "Interventions": "Interventions to control the outbreak/emergency",
+            "Outbreak": "Spread of the outbreak/emergency",
             "ImpactDictionay": {
                 "Health": ["Decrease", "Neutral", "Increase"],
                 "Interventions": ["Hinder", "Neutral", "Enable"],
                 "Outbreak": ["Discourage", "Neutral", "Facilitate"]
             },
-            "TableHeadersCleaned": ["Contextual element", "Factor", "Health & social consequences", "Interventions to control the outbreak", "Spread of the outbreak"],
-            "TableHeaders": ["Lead Id", "Modified Excerpt", "Context - Subdimension", "Health and social consequences", "Interventions to control the outbreak", "Spread of the outbreak"],
+            "TableHeadersCleaned": ["Contextual element", "Factor", "Health & social consequences", "Interventions to control the outbreak/emergency", "Spread of the outbreak/emergency", "Link"],
+            "TableHeaders": ["Lead Id", "Modified Excerpt", "Context - Subdimension", "Health and social consequences", "Interventions to control the outbreak/emergency", "Spread of the outbreak/emergency", "Lead URL"],
             "Admin2": "District",
-            "Population": "Population"
+            "Population": "Population",
+            "Link": "Lead URL"
         }
     }
 }

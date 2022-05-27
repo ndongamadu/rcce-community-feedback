@@ -148,7 +148,8 @@ h6 {
 .submenu {
     padding-top: 10px;
     padding-left: 20px;
-    font-size: 0.86em;
+    font-size: 0.86rem;
+    line-height: 1.8;
 }
 
 .submenu .navFeedback a,
@@ -163,20 +164,6 @@ h6 {
 
 .submenu .nav-item a:hover {
     background: #FFF;
-}
-
-.panel {
-    padding: 0px;
-}
-
-.panel .panel-title {
-    display: block;
-    font-family: "Open Source", sans-serif;
-    font-size: 1.1em;
-    text-transform: uppercase;
-    font-weight: 300;
-    color: #999999;
-    margin: 10px 5px 10px 5px;
 }
 
 

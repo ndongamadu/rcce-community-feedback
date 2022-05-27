@@ -6,7 +6,9 @@
 
 .feedback .sidebar {
     flex: 1;
-    padding: 0 15px 0 15px;
+    margin: 0 5px;
+    padding: 0 10px;
+    box-shadow: 2px 2px 4px rgba(208, 208, 208, 0.5);
 }
 
 .feedback .panel {
@@ -24,15 +26,15 @@
         font-family: "Source Sans Pro", sans-serif;
         font-weight: normal;
         font-size: 0.8rem;
-        line-height: 1;
+        line-height: 1.8;
         color: #000;
         text-transform: uppercase;
     }
     #num {
         font-family: "Source Sans Pro", sans-serif;
         font-weight: bold;
-        font-size: 1.5rem;
-        line-height: 1;
+        font-size: 1.8rem;
+        line-height: 1.8;
         min-height: 40px;
         color: #204669;
         margin: 0;
@@ -40,11 +42,15 @@
 }
 
 #fResetAll {
-    // float: right;
+    background-color: #F14F43;
+    border: 0;
+    color: #FFF;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 0.8rem;
+    line-height: 1.8;
     margin: 10px auto;
-    border-radius: 8px;
-    // background: #ccc;
-    // font-size: 0.75em;
+    text-decoration: none;
 }
 
 .sidebar .selections {
@@ -60,28 +66,59 @@
         border-radius: 8px;
         // box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
         font-family: "Source Sans Pro", sans-serif;
-        font-size: 0.75rem;
-        line-height: 1.5;
-        height: 30px;
+        font-size: 0.81rem;
+        line-height: 1.8;
+        height: 35px;
         width: 60%;
-        margin-right: 5px;
-        // padding: 0 10px 10px 10px;
+        // margin-right: 5px;
+        padding-left: 10px;
     }
     .dropdownDate #dateYearSelect {
         width: 20%;
         // padding-right: 10px;
-        margin-right: 10px;
     }
     .dropdownDate #dateMonthSelect {
         width: 40%;
+        margin-left: 10px;
+    }
+    .dropdownDate .ms-parent {
+        margin-left: 5px;
+    }
+    .ms-choice {
+        height: 35px;
     }
 }
 
+.panel .navigation {
+    margin: 0 5px;
+    padding: 0 5px;
+}
+
+.col-md-6 {
+    padding-left: 0;
+}
+
+.panel .navigation .charts {
+    padding: 10px 5px;
+}
+
+.panel-title {
+    display: block;
+    font-family: "Open Source", sans-serif;
+    font-size: 0.81rem;
+    line-height: 1.8;
+    text-transform: uppercase;
+    color: #999999;
+    margin: 10px 5px 10px 5px;
+}
+
 .page-desc {
-    margin-top: 10px;
-    padding: 5px;
-    font-size: 14px;
-    color: #5b5b5b;
+    margin-top: 5px;
+    padding: 10px 0;
+    font-size: 0.81rem;
+    line-height: 1.8;
+    text-align: justify;
+    border-bottom: 1px solid #CCC;
 }
 
 .d3-tip {
@@ -99,16 +136,26 @@
 
 table.dataTable thead th,
 table.dataTable thead td {
-    font-size: 0.75rem;
-    line-height: 1.5;
+    font-size: 0.83rem;
+    line-height: 1.1;
     padding: 5px 10px;
     border-bottom: 1px solid #ccc;
     text-transform: uppercase;
 }
 
+.datatable {
+    padding: 0 15px;
+}
+
 table.dataTable tbody tr {
-    padding-top: 5px;
-    font-size: 0.82rem;
+    // padding-top: 5px;
+    font-size: 0.81rem;
+    line-height: 1.8;
+}
+
+table.dataTable tbody th,
+table.dataTable tbody td {
+    padding: 0 0 0 10px;
 }
 
 @media only screen and (max-width: 767px) {

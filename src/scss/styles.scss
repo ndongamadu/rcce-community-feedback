@@ -605,6 +605,7 @@ table.dataTable tbody tr {
         // justify-content: center;
         #radial {
             flex: 1;
+            // width: 700px;
         }
         .legends {
             display: flex;
@@ -638,10 +639,10 @@ table.dataTable tbody tr {
     }
     //health
     .tag-health.Decrease {
-        background-color: #209770;
+        background-color: #dd4465;
     }
     .tag-health.Increase {
-        background-color: #dd4465;
+        background-color: #209770;
     }
     .tag-health.Neutral {
         background-color: #eed9c4;
@@ -658,12 +659,16 @@ table.dataTable tbody tr {
     }
     //outbreak
     .tag-Outbreak.Facilitate {
-        background-color: #0c5a3d;
+        background-color: #ca2142;
     }
     .tag-Outbreak.Discourage {
-        background-color: #ca2142;
+        background-color: #0c5a3d;
     }
     .tag-Outbreak.Neutral {
         background-color: #c7b099;
     }
+}
+
+#radials path {
+    cursor: pointer;
 }
