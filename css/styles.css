@@ -516,9 +516,9 @@ table.dataTable tbody tr {
     border: 0;
     border-radius: 0.5rem; }
   .contextCharts .tag-health.Decrease {
-    background-color: #209770; }
-  .contextCharts .tag-health.Increase {
     background-color: #dd4465; }
+  .contextCharts .tag-health.Increase {
+    background-color: #209770; }
   .contextCharts .tag-health.Neutral {
     background-color: #eed9c4; }
   .contextCharts .tag-Interventions.Enable {
@@ -528,8 +528,11 @@ table.dataTable tbody tr {
   .contextCharts .tag-Interventions.Neutral {
     background-color: #faf0e6; }
   .contextCharts .tag-Outbreak.Facilitate {
-    background-color: #0c5a3d; }
-  .contextCharts .tag-Outbreak.Discourage {
     background-color: #ca2142; }
+  .contextCharts .tag-Outbreak.Discourage {
+    background-color: #0c5a3d; }
   .contextCharts .tag-Outbreak.Neutral {
     background-color: #c7b099; }
+
+#radials path {
+  cursor: pointer; }

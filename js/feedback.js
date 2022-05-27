@@ -61,9 +61,10 @@ function initViz() {
     generateDropdowns();
     generateDateDropdown();
 
-    const outbreakColors = ['#D20E1E', '#118DFF', '#12239E'];
+    const outbreakColors = ['#F14F43', '#FF707A', '#FF95B0', '#FFBDE3']; //['#D20E1E', '#118DFF', '#12239E'];
+    const typesCols = ['#204669', '#546B89', '#798BA5', '#A6B0C3', '#DBDEE6'];
     outbreakPie = generatePieChart('topicPie', getPieChartData('Emergency'), outbreakColors);
-    feedbackTypePie = generatePieChart('feedbackType', getPieChartData('Type'));
+    feedbackTypePie = generatePieChart('feedbackType', getPieChartData('Type'), typesCols);
 
     //timeline
     var tlData = getTimelineData();
@@ -93,7 +94,7 @@ function generateKeyFigures() {
         numOrgs = getColumnUniqueValues("Org").length + 1;
     // feedbacks
     $('.statFeedback h5').html('');
-    $('.statFeedback h5').html(numFeedback);
+    $('.statFeedback h5').html(d3.format(',d')(numFeedback));
     // orgs
     $('.statOrg #num').html('');
     $('.statOrg #num').html(numOrgs);
@@ -334,8 +335,10 @@ function generateTimeline(data) {
 
 const pieChartHeight = 200;
 const pieChartColorRange = [primaryColor, secondaryColor, tertiaryColor];
+const outbreakColors = ['#F14F43', '#FF707A', '#FF95B0', '#FFBDE3'];
+const typesCols = ['#204669', '#546B89', '#798BA5', '#A6B0C3', '#DBDEE6'];
 
-function generatePieChart(bind, data, colorRange = pieChartColorRange) {
+function generatePieChart(bind, data, colorRange = typesCols) {
     var chart = c3.generate({
         bindto: '#' + bind,
         size: {
@@ -351,6 +354,22 @@ function generatePieChart(bind, data, colorRange = pieChartColorRange) {
         },
         legend: {
             hide: true
+        },
+        pie: {
+            label: {
+                // threshold: 0.1
+                format: function(value, ratio, id) {
+                    return d3.format('.0%')(ratio);
+                }
+            }
+        },
+        tooltip: {
+            format: {
+                // title: function(d) { return 'Data ' + d; },
+                value: function(value, ratio) {
+                    return d3.format('.0%')(ratio);
+                }
+            }
         }
     });
     $('#' + bind).data('c3-chart', chart);
@@ -397,7 +416,7 @@ function getTopNTopics(dataArg) {
 }
 
 function createCodePctChart(id, value, total = totalNumberOfFeedback) {
-    var colors = ['#D20E1E', '#12239E'];
+    var colors = ['#F14F43', '#DBECE9']; //['#D20E1E', '#12239E'];#F3FAFF DBECE9 #D9F3FF
     var labelArr = ['#feedback', 'total'];
     var data = [
         [labelArr[0], value],
@@ -405,7 +424,7 @@ function createCodePctChart(id, value, total = totalNumberOfFeedback) {
     ];
 
     if (typeof(value) == typeof([])) {
-        colors = ['#D20E1E', '#12239E', '#1f77b4', '#aec7e8'];
+        colors = ['#F14F43', '#BB8379', '#727AFD', '#2C4AC4', '#DBECE9'];
         var sommeVals = 0;
         data = value;
         for (let index = 0; index < value.length; index++) {
@@ -742,31 +761,54 @@ function updateDataSourceFromSelects() {
 } //getFilteredDataFromSelects
 
 function updateVisuals() {
-    // get new data
-    updateDataSourceFromSelects();
+    const nav = $('.submenu li a.nav-link.active').attr('value');
 
-    generateKeyFigures();
-    // update pie charts
-    outbreakPie.load({
-        columns: getPieChartData('Emergency'),
-        unload: true
-    });
-    feedbackTypePie.load({
-        columns: getPieChartData('Type'),
-        unload: true
-    });
-    var tlData = getTimelineData();
-    //update timeline
-    timeLineChart.load({
-        columns: tlData,
-        unload: true
-    });
+    if (nav == "home") {
+        // get new data
+        updateDataSourceFromSelects();
+        generateKeyFigures();
+        outbreakPie.load({
+            columns: getPieChartData('Emergency'),
+            unload: true
+        });
+        feedbackTypePie.load({
+            columns: getPieChartData('Type'),
+            unload: true
+        });
+        var tlData = getTimelineData();
+        //update timeline
+        timeLineChart.load({
+            columns: tlData,
+            unload: true
+        });
 
-    //update datatable
-    updateDataTable();
+        //update datatable
+        updateDataTable();
 
-    // update map choropleth
-    choroplethMap();
+        // update map choropleth
+        choroplethMap();
+
+    }
+    // update others tabs
+
+    if (["rumours", "suggestions", "questions"].includes(nav)) {
+        var type = config.Feedback.Framework.Types[nav];
+        $('#feedbackTypeSelect').val(type);
+
+        // get new data
+        updateDataSourceFromSelects();
+
+        updateTabsDataTableFromFilter();
+        generateKeyFigures();
+    }
+    if (nav == "metrics") {
+        // get new data
+        updateDataSourceFromSelects();
+        generateKeyFigures();
+        updateMetricsFromFilter();
+    }
+
+    // generateKeyFigures();
 }
 
 $('#emergencySelect').on("change", function() {
@@ -787,10 +829,13 @@ $('#demographicSelect').on("change", function() {
 
 //reset 
 $('#fResetAll').on("click", function() {
+    const nav = $('.submenu li a.nav-link.active').attr('value');
     $('#emergencySelect').val('all');
-    $('#feedbackTypeSelect').val('all');
     $('#vulnerableSelect').val('all');
     $('#demographicSelect').val('all');
+
+    (["home", "metrics"].includes(nav)) ? $('#feedbackTypeSelect').val('all'): null;
+
     // reset dates !
 
     updateVisuals();
@@ -801,19 +846,35 @@ $('.navFeedback').on('click', function() {
     $('.navFeedback a').removeClass('active');
     $('.navigation').addClass('hidden');
 
-
+    d3.select('#feedbackTypeSelect').property('disabled', false);
+    $('#feedbackTypeSelect').val('all');
+    updateDataSourceFromSelects();
     //Add active class to the clicked item
     var nav = $('a', this).attr('value');
+
     if (["rumours", "suggestions", "questions"].includes(nav)) {
+        var type = config.Feedback.Framework.Types[nav];
+        $('#feedbackTypeSelect').val(type);
+        updateDataSourceFromSelects();
+
         //filter tabs datatable
         updateTabsDataTable(nav);
         nav = "tabsContent";
+        // disable feedback type filter
+        d3.select('#feedbackTypeSelect').attr('disabled', true);
+
     } else if (nav == 'metrics') {
+        $('#feedbackTypeSelect').val('all');
+        updateDataSourceFromSelects();
+
         if (metricsDataTable == undefined) {
             generateMetrics();
         }
 
     }
+
+    generateKeyFigures();
+
     $('#' + nav).removeClass('hidden');
     $('a', this).addClass('active');
 
@@ -823,28 +884,32 @@ $('.navFeedback').on('click', function() {
 
 function updateTabsDataTable(nav) {
     var type = config.Feedback.Framework.Types[nav];
-    var filter = communityFeedbackData.filter((d) => { return d[config.Feedback.Framework.Type] == type; });
-    // var title = (type == "rumours") ? "Rumors & believes" : type;
+    var filter = globalFilteredCFData.filter((d) => { return d[config.Feedback.Framework.Type] == type; });
 
-    $('#tabsContent .panel-title').html(type);
+    // $('#tabsContent .panel-title').html(type);
 
-    var max = d3.sum(filter, (d) => { return d[config.Feedback.Framework.Aggregation]; });
     if (tabsDataTable == undefined) {
         //create the table 
         generateTabsDataTable(filter);
     } else {
-        var dt = getTabsDataTableData(filter);
-        $('#tabsDataTable').dataTable().fnClearTable();
-        $('#tabsDataTable').dataTable().fnAddData(dt);
-        generateTabsDTCodesCharts(dt, max);
+        updateTabsDataTableFromFilter(filter);
     }
-
 
 } //updateTabsDataTable
 
+function updateTabsDataTableFromFilter(data = globalFilteredCFData) {
+    var dt = getTabsDataTableData(data);
+    var max = d3.sum(data, (d) => { return d[config.Feedback.Framework.Aggregation]; });
+    $('#tabsDataTable').dataTable().fnClearTable();
+    $('#tabsDataTable').dataTable().fnAddData(dt);
+
+    generateTabsDTCodesCharts(dt, max);
+
+} //updateTabsDataTableFromFilter
+
 let tabsDataTable;
 
-function generateTabsDataTable(dataArg = communityFeedbackData) {
+function generateTabsDataTable(dataArg = globalFilteredCFData) {
     var dtData = getTabsDataTableData(dataArg);
     tabsDataTable = $('#tabsDataTable').DataTable({
         data: dtData,
@@ -939,42 +1004,28 @@ function generateTabsDTCodesCharts(data, max) {
     d3.select('#tabsDataTable')
         .selectAll('.spark')
         .attr('id', (d, i) => {
-            return "spark-" + i;
+            return "spark-tab-" + i;
         });
     // restons sur les 15 premieres valeurs, qui sont affcichees sur la table
     for (let index = 0; index < 15; index++) {
         const id = "-" + data[index][0];
         createCodePctChart(id, data[index][4], max);
         //spark
-        var sparkdata = getSparkChartDataForTabs(data[index][1], data[index][2], data[index][3]);
+        const sparkdata = getSparkChartDataForTabs(data[index][1], data[index][2]);
         // console.log(sparkdata);
-        createSparkLine(id, sparkdata);
+        const spid = "-tab-" + data[index][0];
+        createSparkLine(spid, sparkdata);
     }
 
 }
 
-function getSparkChartDataForTabs(emergency, code, topic, dataArg = communityFeedbackData) {
-    // var filter = dataArg.filter((d) => {
-    //     return (d[config.Feedback.Framework.Emergency] == emergency &&
-    //         d[config.Feedback.Framework.Code] == code &&
-    //         d[config.Feedback.Framework.Topic] == topic);
-    // });
-    // var filter2 = dataArg.filter((d) => {
-    //     return (d[config.Feedback.Framework.Emergency] == emergency &&
-    //         d[config.Feedback.Framework.Code] == code);
-    // });
+function getSparkChartDataForTabs(emergency, code, dataArg = globalFilteredCFData) {
     var filter = dataArg
         .filter((d) => {
-            return d[config.Feedback.Framework.Emergency] == emergency;
-        })
-        .filter((v) => { return v[config.Feedback.Framework.Code] == code });
-
-    if (topic != "") {
-        filter = filter.filter((v) => { return v[config.Feedback.Framework.Topic] == topic; });
-    }
+            return (d[config.Feedback.Framework.Emergency] == emergency) && (d[config.Feedback.Framework.Code] == code);
+        });
 
     var data = (filter.length == 0) ? [] : getSparklineData(filter);
-    // console.log(filter);
     return data;
 } //getSparkChartData
 
@@ -989,13 +1040,38 @@ let metricsDataTable;
 function generateMetrics() {
     demographicPie = generatePieChart('demographicPie', getPieChartData('Population'));
     genderPie = generatePieChart('genderPie', getPieChartData('Gender'));
-    vulnerablesPie = generatePieChart('vulnerablesPie', getPieChartData('Population'));
+    vulnerablesPie = generatePieChart('vulnerablesPie', getPieChartData('Gender'), outbreakColors);
     channelsPie = generatePieChart('channelsPie', getPieChartData('Emergency'));
 
     generateMetricsDataTable();
 
 } //generateMetrics
 
+function updateMetricsFromFilter(data = globalFilteredCFData) {
+    //pies
+    demographicPie.load({
+        columns: getPieChartData('Population'),
+        unload: true
+    });
+    genderPie.load({
+        columns: getPieChartData('Gender'),
+        unload: true
+    });
+    vulnerablesPie.load({
+        columns: getPieChartData('Population'),
+        unload: true
+    });
+    channelsPie.load({
+        columns: getPieChartData('Emergency'),
+        unload: true
+    });
+    const dt = getMetricsTableData(data);
+    $('#metricsTable').dataTable().fnClearTable();
+    $('#metricsTable').dataTable().fnAddData(dt);
+
+    generateMetricsTableCharts(dt);
+
+} //updateTabsDataTableFromFilter
 function generateMetricsDataTable(dataArg = communityFeedbackData) {
     var dtData = getMetricsTableData(dataArg);
     metricsDataTable = $('#metricsTable').DataTable({
@@ -1091,20 +1167,19 @@ function getMetricsTableData(dataArg) {
 } //getMetricsTableData
 
 function generateMetricsTableCharts(data, dataArg = communityFeedbackData) {
-    console.log(data);
 
     //gender charts
     d3.select('#metricsTable')
         .selectAll('.gender')
         .attr('id', (d, i) => {
-            return "percentage-" + i;
+            return "percentage-gd-" + i;
         });
 
     //vulnerable groups charts
     d3.select('#metricsTable')
         .selectAll('.vul')
         .attr('id', (d, i) => {
-            return "vul-" + i;
+            return "percentage-vul-" + i;
         });
 
 
@@ -1119,24 +1194,27 @@ function generateMetricsTableCharts(data, dataArg = communityFeedbackData) {
     d3.select('#metricsTable')
         .selectAll('.spk')
         .attr('id', (d, i) => {
-            return "spark-" + i;
+            return "spark-2-" + i;
         });
 
     for (let index = 0; index < data.length; index++) {
         const element = data[index];
-        const id = "-" + data[index][0];
+        const id = "-2-" + data[index][0];
         // Gender chart
         const filter = dataArg.filter((d) => { return d[config.Feedback.Framework.Adm1] == element[1]; });
+
         const genderdata = getPieChartData("Gender", filter);
-        createCodePctChart(id, genderdata);
+        const gdid = "-gd-" + data[index][0];
+        createCodePctChart(gdid, genderdata);
 
         // vulnerable chart
-        const vuldata = getBarChartData("Population", filter);
-        generateBarChart(id, vuldata);
+        const vuldata = getPieChartData("Population", filter);
+        const vulid = "-vul-" + data[index][0];
+        createCodePctChart(vulid, vuldata);
+
 
         //gauge total
-        const pctid = "-2" + id;
-        createCodePctChart(pctid, element[2]);
+        createCodePctChart(id, element[2]);
 
         //spark
         var sparkdata = getSparklineData(filter);

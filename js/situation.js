@@ -2,7 +2,7 @@
  * Behaviors Page
  */
 
-let situationDataUrl = 'data/deep.csv';
+let situationDataUrl = 'data/deep_2500520222.csv';
 let configFile = 'config/config.json';
 let testDataURL = 'data/radial.csv';
 
@@ -207,7 +207,7 @@ function getRadialData(data = situationData) {
         //
         radialData.push({
             'id': getFactorId(factor),
-            'factor': factor,
+            'factor': String(factor),
             // negatives
             'health - Neg': healthArr[0],
             'int - Neg': InterArr[0],
@@ -248,21 +248,23 @@ function filterRadialData(data) {
 var g;
 var radialChartScale;
 
-const healthColorArr = ["#dd4465", "#eed9c4", "#209770"], //"#E9F1EA", "#2F9C67", "#9EC8AE"
-    InterventionsColorArr = ["#e76889", "#faf0e6", "#47b983"], //"#D90368", "#E996AD", "#FAE7EA"
-    OutbreakColorArr = ["#ca2142", "#c7b099", "#0c5a3d"]; //"#204669", "#798BA5", "#DBDEE6"
+const healthColorArr = ["#209770", "#eed9c4", "#dd4465"], //"#E9F1EA", "#2F9C67", "#9EC8AE"
+    InterventionsColorArr = ["#47b983", "#faf0e6", "#e76889"], //"#D90368", "#E996AD", "#FAE7EA"
+    OutbreakColorArr = ["#0c5a3d", "#c7b099", "#ca2142"]; //"#204669", "#798BA5", "#DBDEE6"
 
-const negativesColorArr = ["#dd4465", "#e76889", "#ca2142"],
+const negativesColorArr = ["#209770", "#47b983", "#0c5a3d"],
     neutralsColorArr = ["#eed9c4", "#faf0e6", "#c7b099"],
-    positivesColorArr = ["#209770", "#47b983", "#0c5a3d"];
+    positivesColorArr = ["#dd4465", "#e76889", "#ca2142"];
+
 const impactColorRange = [...negativesColorArr, ...neutralsColorArr, ...positivesColorArr];
+
 var headers = [
     'health - Neg', 'int - Neg', 'out - Neg',
     'health - Neu', 'int - Neu', 'out - Neu',
     'health - Pos', 'int - Pos', 'out - Pos'
 ];
 
-function generateRadialChart(dataArg) {
+function generateRadialChart(dataArg = situationData) {
     d3.select('#radial').select('svg')
         // .transition().delay(100).duration(500)
         .remove();
@@ -282,7 +284,8 @@ function generateRadialChart(dataArg) {
         .append('g')
         .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
     var innerRadius = 75,
-        outerRadius = 300; //Math.min(width, height) / 5;
+        outerRadius = Math.min(width, height) / 2.1;
+    // console.log(Math.min(width, height) / 2.1);
 
     var x = d3.scaleBand()
         .range([0, 2 * Math.PI])
@@ -304,6 +307,7 @@ function generateRadialChart(dataArg) {
     var radialtip = d3.select('#radial').append('div').attr('class', 'd3-tip map-tip hidden');
 
     g.append("g")
+        .attr('id', "radials")
         .selectAll("g")
         .data(d3.stack().keys(headers)(data))
         .enter().append("g")
@@ -336,10 +340,20 @@ function generateRadialChart(dataArg) {
         })
         .on("mouseout", function() {
             radialtip.classed('hidden', true);
+        })
+        .on("click", function(d) {
+            // console.log(d);
+            var filter = dataArg.filter((v) => { return v[config.Context.Framework.Subdimension] == d.data['factor']; });
+            updateDataTable(filter);
+
+            // $(this).attr('class', 'selected');
+            // g.selectAll('.bar').attr('fill', '#ccc');
+
+            // console.log($(this));
+            // $(this).selectAll('path').select('.bar').attr('fill', function(d) {
+            //     return radialChartScale(d.key);
+            // });
         });
-    // .on("click", function(d) {
-    //     return console.log(d)
-    // });
 
     var label = g.append("g")
         .selectAll("g")
@@ -514,10 +528,16 @@ function getDataTableData(data = situationData) {
     data.forEach(element => {
         var vals = []; //start with the id
         for (let index = 0; index < headers.length; index++) {
-            var value = "";
-            headers[index] == "Health and social consequences" ? value = getTaggedImpact("health", element[headers[index]]) :
-                headers[index] == "Interventions to control the outbreak" ? value = getTaggedImpact("Interventions", element[headers[index]]) :
-                headers[index] == "Spread of the outbreak" ? value = getTaggedImpact("Outbreak", element[headers[index]]) : value = element[headers[index]];
+            var value = value = element[headers[index]];
+
+            headers[index] == config.Context.Framework.Health ? value = getTaggedImpact("health", element[headers[index]]) :
+                headers[index] == config.Context.Framework.Interventions ? value = getTaggedImpact("Interventions", element[headers[index]]) :
+                headers[index] == config.Context.Framework.Outbreak ? value = getTaggedImpact("Outbreak", element[headers[index]]) : null;
+
+            if (headers[index] == config.Context.Framework.Link) {
+                const link = headers[index];
+                value = '<a href="' + link + '" target="blank"><i class="fa fa-external-link"></i></a>';
+            }
 
             vals.push(value);
         }
@@ -570,17 +590,18 @@ function getTableImpactColor(impactVocab) {
 
 } //getTableImpactColor
 
-function generateContextDataTable() {
-    var dtData = getDataTableData();
+function generateContextDataTable(data) {
+    var dtData = getDataTableData(data);
     datatableContext = $('#datatableContext').DataTable({
         data: dtData,
         "columns": [
             { "width": "1%" },
-            { "width": "20%" },
-            { "width": "10%" },
-            { "width": "5%" },
-            { "width": "5%" },
-            { "width": "5%" }
+            { "width": "20%" }, //context
+            { "width": "10%" }, //factor
+            { "width": "5%" }, //health
+            { "width": "5%" }, // interventions
+            { "width": "5%" }, //outbreak
+            { "width": "1%" } //link
         ],
         "columnDefs": [{
                 "className": "dt-head-left",
@@ -606,6 +627,13 @@ function generateContextDataTable() {
 
 } //generateContextDataTable
 
+function updateDataTable(data = situationData) {
+    var dt = getDataTableData(data);
+    $('#datatableContext').dataTable().fnClearTable();
+    $('#datatableContext').dataTable().fnAddData(dt);
+
+} //updateDataTable
+
 function getFilteredData() {
     var filter = situationData;
     var outbreak = $('#outbreakSelect').val(),
@@ -627,14 +655,21 @@ function getFilteredData() {
 $('#outbreakSelect').on('change', function(d) {
     var filter = getFilteredData();
     generateRadialChart(filter);
+    //filter table
+    updateDataTable(filter);
 });
 $('#areaSelect').on('change', function(d) {
 
     var filter = getFilteredData();
-    console.log(filter);
     generateRadialChart(filter);
+
+    //filter table
+    updateDataTable(filter);
 });
 $('#groupsSelect').on('change', function(d) {
     var filter = getFilteredData();
     generateRadialChart(filter);
+
+    //filter table
+    updateDataTable(filter);
 });
